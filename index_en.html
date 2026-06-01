@@ -108,8 +108,7 @@ body {
 .name-row {
   display: flex; align-items: center; gap: 8px;
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius-sm); padding: 8px 12px;
-  overflow: hidden;
+  border-radius: var(--radius-sm); padding: 8px 8px 8px 12px;
 }
 .name-num {
   width: 26px; height: 26px; border-radius: 50%;
@@ -119,7 +118,7 @@ body {
   flex-shrink: 0;
 }
 .name-input {
-  flex: 1; font-size: 15px; border: none; outline: none;
+  flex: 1; min-width: 0; font-size: 15px; border: none; outline: none;
   background: transparent; color: var(--text);
   font-family: 'Noto Sans JP', sans-serif;
 }
