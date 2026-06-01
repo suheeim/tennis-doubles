@@ -125,14 +125,13 @@ body {
 }
 .name-input::placeholder { color: var(--text3); }
 .mic-btn {
-  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
-  background: transparent; border: none;
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  background: var(--surface2); border: 1px solid var(--border);
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: 15px; transition: opacity .15s;
-  opacity: 0.5;
+  cursor: pointer; font-size: 15px; transition: background .15s;
 }
-.mic-btn:active { opacity: 1; }
-.mic-btn.recording { opacity: 1; color: #E24B4A; animation: pulse .6s infinite alternate; }
+.mic-btn:active { background: var(--green-light); }
+.mic-btn.recording { background: #FCEBEB; color: #E24B4A; animation: pulse .6s infinite alternate; }
 @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.15); } }
 .btn-primary {
   width: 100%; padding: 15px; background: var(--green); color: #fff;
@@ -376,7 +375,7 @@ function renderNameList() {
     rows += '<div class="name-row">'
       + '<div class="name-num">' + (i+1) + '</div>'
       + '<input class="name-input" id="p' + i + '" type="text" placeholder="Player ' + (i+1) + '" maxlength="12" value="' + saved + '">'
-      + '<button style="background:none;border:none;cursor:pointer;font-size:18px;padding:0 4px;flex-shrink:0;color:var(--text3)" id="mic' + i + '" onclick="startVoice(' + i + ')">🎤</button>'
+      + '<button class="mic-btn" id="mic' + i + '" onclick="startVoice(' + i + ')">🎤</button>'
       + '</div>';
   }
   list.innerHTML = rows;
