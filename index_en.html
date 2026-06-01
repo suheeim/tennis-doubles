@@ -109,6 +109,7 @@ body {
   display: flex; align-items: center; gap: 8px;
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--radius-sm); padding: 8px 12px;
+  overflow: hidden;
 }
 .name-num {
   width: 26px; height: 26px; border-radius: 50%;
@@ -124,14 +125,14 @@ body {
 }
 .name-input::placeholder { color: var(--text3); }
 .mic-btn {
-  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
   background: transparent; border: none;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: 16px; transition: background .15s;
-  color: var(--text3);
+  cursor: pointer; font-size: 15px; transition: opacity .15s;
+  opacity: 0.5;
 }
-.mic-btn:active { background: var(--surface2); }
-.mic-btn.recording { color: #E24B4A; animation: pulse .6s infinite alternate; }
+.mic-btn:active { opacity: 1; }
+.mic-btn.recording { opacity: 1; color: #E24B4A; animation: pulse .6s infinite alternate; }
 @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.15); } }
 .btn-primary {
   width: 100%; padding: 15px; background: var(--green); color: #fff;
@@ -374,7 +375,7 @@ function renderNameList() {
     var saved = existing[i] ? existing[i].replace(/"/g, '&quot;') : '';
     rows += '<div class="name-row">'
       + '<div class="name-num">' + (i+1) + '</div>'
-      + '<input class="name-input" id="p' + i + '" type="text" placeholder="選手 ' + (i+1) + '" maxlength="12" value="' + saved + '">'
+      + '<input class="name-input" id="p' + i + '" type="text" placeholder="Player ' + (i+1) + '" maxlength="12" value="' + saved + '">'
       + '<button style="background:none;border:none;cursor:pointer;font-size:18px;padding:0 4px;flex-shrink:0;color:var(--text3)" id="mic' + i + '" onclick="startVoice(' + i + ')">🎤</button>'
       + '</div>';
   }
@@ -409,7 +410,7 @@ function getPlayers() {
   for (var i = 0; i < playerCount; i++) {
     var el = document.getElementById('p' + i);
     var v = el ? el.value.trim() : '';
-    result.push(v || ('選手' + (i+1)));
+    result.push(v || ('Player ' + (i+1)));
   }
   return result;
 }
@@ -442,7 +443,7 @@ function doDraw(keepOrder) {
   var players = noNameMode
     ? (function() {
         var arr = [];
-        for (var i = 0; i < playerCount; i++) arr.push('選手' + (i+1));
+        for (var i = 0; i < playerCount; i++) arr.push('Player ' + (i+1));
         return arr;
       })()
     : getPlayers();
