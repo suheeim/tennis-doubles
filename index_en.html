@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="テニス抽選">
-<title>ダブルス抽選</title>
+<meta name="apple-mobile-web-app-title" content="Tennis Draw">
+<title>Doubles Draw</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -216,13 +216,13 @@ body {
 <div class="header">
   <div style="display:flex;justify-content:space-between;align-items:center">
     <div>
-      <h1>🎾 ダブルス抽選</h1>
-      <p>テニスダブルスのコートを自動組み合わせ</p>
+      <h1>🎾 Doubles Draw</h1>
+      <p>Auto court assignment for tennis doubles</p>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-      <a href="index_en.html" style="color:rgba(255,255,255,0.8);font-size:11px;text-decoration:underline;font-family:'Noto Sans JP',sans-serif">English</a>
+      <a href="index.html" style="color:rgba(255,255,255,0.8);font-size:11px;text-decoration:underline;font-family:'Noto Sans JP',sans-serif">日本語</a>
       <button id="resetBtn" onclick="resetAll()" style="display:none;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;white-space:nowrap">
-        🏠 最初から
+        🏠 Reset
       </button>
     </div>
   </div>
@@ -234,62 +234,62 @@ body {
   <!-- 名前入力不要チェック -->
   <label class="check-row">
     <input type="checkbox" id="noNameChk" onchange="onNoNameChange()">
-    <span style="font-size:15px;font-weight:500;color:var(--text)">名前入力不要（番号のみ）</span>
-    <span>番号で抽選</span>
+    <span style="font-size:15px;font-weight:500;color:var(--text)">No names (numbers only)</span>
+    <span>Draw by number</span>
   </label>
 
   <!-- STEP 1: 人数入力 -->
   <div class="step-card">
-    <div class="step-title"><span class="step-num">1</span>参加人数を入力</div>
+    <div class="step-title"><span class="step-num">1</span>Enter number of players</div>
     <div style="display:flex;align-items:center;gap:8px">
       <div style="flex:1;display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 10px;gap:6px">
         <input id="cntInput" type="number" inputmode="numeric" pattern="[0-9]*"
-          min="4" max="30" placeholder="例: 8"
+          min="4" max="30" placeholder="e.g. 8"
           style="flex:1;font-size:22px;font-weight:700;color:var(--green);text-align:center;padding:10px 0;border:none;outline:none;background:transparent;font-family:'Noto Sans JP',sans-serif"
           oninput="this.value=this.value.replace(/[^0-9]/g,'');updateCntBtn()"
           onkeydown="if(event.key==='Enter')confirmCount()">
         <span style="font-size:14px;color:var(--text3)">人</span>
-        <button class="mic-btn" id="micCount" onclick="startVoiceCount()" title="音声入力">🎤</button>
+        <button class="mic-btn" id="micCount" onclick="startVoiceCount()" title="Voice input">🎤</button>
       </div>
-      <button id="cntOkBtn" class="cnt-ok-btn" onclick="confirmCount()" disabled style="opacity:0.4;cursor:not-allowed">決定</button>
+      <button id="cntOkBtn" class="cnt-ok-btn" onclick="confirmCount()" disabled style="opacity:0.4;cursor:not-allowed">OK</button>
     </div>
     <div id="cntError" style="font-size:12px;color:var(--amber);margin-top:8px;display:none"></div>
   </div>
 
   <!-- STEP 2: 名前入力（名前不要モードOFFのとき表示） -->
   <div class="step-card" id="step2Card" style="display:none">
-    <div class="step-title"><span class="step-num">2</span>名前を入力（省略可）</div>
+    <div class="step-title"><span class="step-num">2</span>Enter names (optional)</div>
     <div class="name-list" id="nameList"></div>
   </div>
 
   <button id="goDrawBtn" class="btn-primary" onclick="goToDraw()" disabled
     style="opacity:0.4;cursor:not-allowed">
-    <span>🔀</span> 抽選へ進む
+    <span>🔀</span> Start Draw
   </button>
 </div>
 
 <!-- 抽選タブ -->
 <div id="sec-draw" class="section">
-  <div class="sec-label">抽選結果</div>
+  <div class="sec-label">Draw Results</div>
   <div id="drawResult">
     <div class="empty">
       <div class="empty-icon">🎾</div>
-      参加者タブで設定して<br>「抽選へ進む」を押してください
+      参加者タブで設定して<br>「Start Draw」を押してください
     </div>
   </div>
   <div id="prevResult" style="display:none;margin-top:16px">
-    <div style="font-size:12px;font-weight:700;color:var(--text3);letter-spacing:.08em;margin-bottom:8px">📋 前回の結果</div>
+    <div style="font-size:12px;font-weight:700;color:var(--text3);letter-spacing:.08em;margin-bottom:8px">📋 Previous Result</div>
     <div id="prevResultBody"></div>
   </div>
-  <button class="btn-primary" onclick="doDraw(false)">🔀 再抽選</button>
-  <button class="serve-btn" id="serveBtn" onclick="toggleServe()">🎾 サーブを自動で決める</button>
-  <button class="btn-secondary" onclick="saveHistory()">💾 履歴に保存</button>
+  <button class="btn-primary" onclick="doDraw(false)">🔀 Redraw</button>
+  <button class="serve-btn" id="serveBtn" onclick="toggleServe()">🎾 Auto decide serve</button>
+  <button class="btn-secondary" onclick="saveHistory()">💾 Save to history</button>
 </div>
 
 <!-- 履歴タブ -->
 <div id="sec-history" class="section">
   <div class="sec-label">
-    抽選履歴
+    Draw History
     <button onclick="clearHistory()">全削除</button>
   </div>
   <div id="historyList"></div>
@@ -299,15 +299,15 @@ body {
 <nav class="bottom-nav">
   <button class="nav-btn active" id="nav-players" onclick="switchTab('players')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="7" r="3"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/><path d="M16 3.13a4 4 0 010 7.75"/><path d="M21 21v-2a4 4 0 00-3-3.87"/></svg>
-    <span>参加者</span>
+    <span>Players</span>
   </button>
   <button class="nav-btn" id="nav-draw" onclick="switchTab('draw')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 3l4 4-4 4"/><path d="M20 7H4"/><path d="M8 21l-4-4 4-4"/><path d="M4 17h16"/></svg>
-    <span>抽選</span>
+    <span>Draw</span>
   </button>
   <button class="nav-btn" id="nav-history" onclick="switchTab('history')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-    <span>履歴</span>
+    <span>History</span>
   </button>
 </nav>
 
@@ -317,7 +317,7 @@ var lastDraw = null;
 var serveEnabled = false;
 var noNameMode = false;
 var activeRecognition = null;
-var STORAGE_KEY = 'tennis_doubles_v2';
+var STORAGE_KEY = 'tennis_doubles_en_v2';
 
 function updateCntBtn() {
   var val = parseInt(document.getElementById('cntInput').value);
@@ -343,12 +343,12 @@ function confirmCount() {
   var err = document.getElementById('cntError');
   if (!val || val < 4) {
     if (document.getElementById('cntInput').value !== '') {
-      err.textContent = '⚠️ 4人以上を入力してください'; err.style.display = 'block';
+      err.textContent = '⚠️ Please enter 4 or more'; err.style.display = 'block';
     }
     return;
   }
   if (val > 30) {
-    err.textContent = '⚠️ 30人以下で入力してください'; err.style.display = 'block'; return;
+    err.textContent = '⚠️ Please enter 30 or less'; err.style.display = 'block'; return;
   }
   err.style.display = 'none';
   playerCount = val;
@@ -491,7 +491,7 @@ function doDraw(keepOrder) {
   });
 
   if (leftover.length > 0) {
-    html += '<div class="leftover-card"><div class="leftover-lbl">⏸ 待機</div><div class="chips">'
+    html += '<div class="leftover-card"><div class="leftover-lbl">⏸ Waiting</div><div class="chips">'
       + leftover.map(function(p) { return '<span class="chip">' + p + '</span>'; }).join('')
       + '</div></div>';
   }
@@ -519,29 +519,27 @@ function toggleServe() {
   serveEnabled = !serveEnabled;
   var btn = document.getElementById('serveBtn');
   btn.classList.toggle('active', serveEnabled);
-  btn.textContent = serveEnabled ? '✅ サーブ自動決定：ON' : '🎾 サーブを自動で決める';
+  btn.textContent = serveEnabled ? '✅ Auto Serve: ON' : '🎾 Auto decide serve';
   if (lastDraw) doDraw(true);
 }
 
 function startVoiceCount() {
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) { alert('お使いのブラウザは音声入力に対応していません。\nSafari（iOS）またはChrome（Android）をお試しください。'); return; }
+  if (!SR) { alert('Voice input not supported.\nTry Safari (iOS) or Chrome (Android).'); return; }
   var btn = document.getElementById('micCount');
   var inp = document.getElementById('cntInput');
   if (activeRecognition) { activeRecognition.stop(); activeRecognition = null; return; }
   var rec = new SR();
-  rec.lang = 'ja-JP';
+  rec.lang = 'en-US';
   rec.interimResults = false;
   rec.maxAlternatives = 1;
   activeRecognition = rec;
   btn.textContent = '🔴';
   rec.onresult = function(e) {
-    var transcript = e.results[0][0].transcript;
-    var num = transcript.replace(/人/g, '').replace(/[^\d０-９]/g, '').replace(/[０-９]/g, function(c) { return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); });
-    if (!num) {
-      var kanji = {'一':'1','二':'2','三':'3','四':'4','五':'5','六':'6','七':'7','八':'8','九':'9','十':'10','十一':'11','十二':'12','十三':'13','十四':'14','十五':'15','十六':'16','十七':'17','十八':'18','十九':'19','二十':'20'};
-      num = kanji[transcript.replace(/人/g, '')] || '';
-    }
+    var transcript = e.results[0][0].transcript.toLowerCase().trim();
+    var words = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8','nine':'9','ten':'10','eleven':'11','twelve':'12','thirteen':'13','fourteen':'14','fifteen':'15','sixteen':'16','seventeen':'17','eighteen':'18','nineteen':'19','twenty':'20'};
+    var num = transcript.replace(/people|players|person/g,'').trim();
+    num = words[num] || num.replace(/[^0-9]/g,'');
     if (num) { inp.value = num; updateCntBtn(); confirmCount(); }
     btn.textContent = '🎤';
     activeRecognition = null;
@@ -554,14 +552,14 @@ function startVoiceCount() {
 function startVoice(idx) {
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) {
-    alert('お使いのブラウザは音声入力に対応していません。\nSafari（iOS）またはChrome（Android）をお試しください。');
+    alert('Voice input not supported.\nTry Safari (iOS) or Chrome (Android).');
     return;
   }
   var btn = document.getElementById('mic' + idx);
   var inp = document.getElementById('p' + idx);
   if (activeRecognition) { activeRecognition.stop(); activeRecognition = null; return; }
   var rec = new SR();
-  rec.lang = 'ja-JP';
+  rec.lang = 'en-US';
   rec.interimResults = false;
   rec.maxAlternatives = 1;
   activeRecognition = rec;
@@ -592,8 +590,8 @@ function resetAll() {
   document.getElementById('noNameChk').checked = false;
   playerCount = 0; lastDraw = null; serveEnabled = false; noNameMode = false;
   var sb = document.getElementById('serveBtn');
-  if (sb) { sb.classList.remove('active'); sb.textContent = '🎾 サーブを自動で決める'; }
-  document.getElementById('drawResult').innerHTML = '<div class="empty"><div class="empty-icon">🎾</div>参加者タブで設定して<br>「抽選へ進む」を押してください</div>';
+  if (sb) { sb.classList.remove('active'); sb.textContent = '🎾 Auto decide serve'; }
+  document.getElementById('drawResult').innerHTML = '<div class="empty"><div class="empty-icon">🎾</div>参加者タブで設定して<br>「Start Draw」を押してください</div>';
   var pr = document.getElementById('prevResult');
   if (pr) pr.style.display = 'none';
   var pb = document.getElementById('prevResultBody');
@@ -608,12 +606,12 @@ function resetAll() {
 }
 
 function saveHistory() {
-  if (!lastDraw) { alert('先に抽選してください'); return; }
+  if (!lastDraw) { alert('Please draw first'); return; }
   var history = loadHistory();
   history.unshift({ time: lastDraw.time.toISOString(), courts: lastDraw.courts, leftover: lastDraw.leftover });
   if (history.length > 30) history = history.slice(0, 30);
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(history)); } catch(e) {}
-  alert('✅ 履歴に保存しました');
+  alert('✅ Saved to history');
 }
 
 function loadHistory() {
@@ -624,10 +622,10 @@ function renderHistory() {
   var list = document.getElementById('historyList');
   var history = loadHistory();
   if (history.length === 0) {
-    list.innerHTML = '<div class="empty"><div class="empty-icon">🕐</div>まだ履歴がありません<br>抽選後に保存してください</div>';
+    list.innerHTML = '<div class="empty"><div class="empty-icon">🕐</div>No history yet.<br>Save after drawing.</div>';
     return;
   }
-  var days = ['日','月','火','水','木','金','土'];
+  var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   list.innerHTML = history.map(function(h, idx) {
     var d = new Date(h.time);
     var ds = (d.getMonth()+1) + '/' + d.getDate() + '（' + days[d.getDay()] + '）' + d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0');
@@ -635,7 +633,7 @@ function renderHistory() {
       return '<div class="history-line">🎾 コート' + (i+1) + ': ' + c[0] + '・' + c[1] + ' <b>vs</b> ' + c[2] + '・' + c[3] + '</div>';
     }).join('');
     var lo = (h.leftover && h.leftover.length)
-      ? '<div class="history-line" style="color:var(--text3)">⏸ 待機: ' + h.leftover.join('・') + '</div>' : '';
+      ? '<div class="history-line" style="color:var(--text3)">⏸ Waiting: ' + h.leftover.join('・') + '</div>' : '';
     return '<div class="history-card">'
       + '<div class="history-head"><span class="history-date">📅 ' + ds + '</span>'
       + '<button class="history-del" onclick="deleteHistory(' + idx + ')">×</button></div>'
@@ -651,7 +649,7 @@ function deleteHistory(idx) {
 }
 
 function clearHistory() {
-  if (!confirm('履歴を全て削除しますか？')) return;
+  if (!confirm('Delete all history?')) return;
   try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
   renderHistory();
 }
