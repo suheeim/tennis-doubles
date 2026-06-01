@@ -106,7 +106,7 @@ body {
 .cnt-ok-btn:active { background: var(--green-dark); }
 .name-list { display: flex; flex-direction: column; gap: 8px; }
 .name-row {
-  display: flex; align-items: center; gap: 10px;
+  display: flex; align-items: center; gap: 8px;
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--radius-sm); padding: 8px 12px;
 }
@@ -124,12 +124,14 @@ body {
 }
 .name-input::placeholder { color: var(--text3); }
 .mic-btn {
-  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
-  background: var(--surface2); border: 1px solid var(--border);
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  background: transparent; border: none;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; font-size: 16px; transition: background .15s;
+  color: var(--text3);
 }
-.mic-btn.recording { background: #FCEBEB; border-color: #E24B4A; animation: pulse .6s infinite alternate; }
+.mic-btn:active { background: var(--surface2); }
+.mic-btn.recording { color: #E24B4A; animation: pulse .6s infinite alternate; }
 @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.15); } }
 .btn-primary {
   width: 100%; padding: 15px; background: var(--green); color: #fff;
@@ -236,14 +238,15 @@ body {
   <!-- STEP 1: 人数入力 -->
   <div class="step-card">
     <div class="step-title"><span class="step-num">1</span>参加人数を入力</div>
-    <div class="count-input-row">
+    <div style="display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 10px;gap:6px">
       <input id="cntInput" type="number" inputmode="numeric" pattern="[0-9]*"
         min="4" max="30" placeholder="例: 8"
-        oninput="this.value=this.value.replace(/[^0-9]/g,'')"
-        onkeydown="if(event.key==='Enter')confirmCount()">
-      <span class="unit">人</span>
+        style="flex:1;font-size:22px;font-weight:700;color:var(--green);text-align:center;padding:10px 0;border:none;outline:none;background:transparent;font-family:'Noto Sans JP',sans-serif"
+        oninput="this.value=this.value.replace(/[^0-9]/g,'');updateCntBtn()"
+        onkeydown="if(event.key==='Enter')confirmCount()"
+        onblur="confirmCount()">
+      <span style="font-size:14px;color:var(--text3)">人</span>
       <button class="mic-btn" id="micCount" onclick="startVoiceCount()" title="音声入力">🎤</button>
-      <button class="cnt-ok-btn" onclick="confirmCount()">決定</button>
     </div>
     <div id="cntError" style="font-size:12px;color:var(--amber);margin-top:8px;display:none"></div>
   </div>
@@ -254,7 +257,8 @@ body {
     <div class="name-list" id="nameList"></div>
   </div>
 
-  <button class="btn-primary" onclick="goToDraw()">
+  <button id="goDrawBtn" class="btn-primary" onclick="goToDraw()" disabled
+    style="opacity:0.4;cursor:not-allowed">
     <span>🔀</span> 抽選へ進む
   </button>
 </div>
@@ -309,6 +313,13 @@ var serveEnabled = false;
 var noNameMode = false;
 var activeRecognition = null;
 var STORAGE_KEY = 'tennis_doubles_v2';
+
+function updateCntBtn() {
+  var val = parseInt(document.getElementById('cntInput').value);
+  var ok = val && val >= 4 && val <= 30;
+  var goBtn = document.getElementById('goDrawBtn');
+  if (goBtn) { goBtn.disabled = !ok; goBtn.style.opacity = ok ? '1' : '0.4'; goBtn.style.cursor = ok ? 'pointer' : 'not-allowed'; }
+}
 
 function onNoNameChange() {
   noNameMode = document.getElementById('noNameChk').checked;
@@ -538,6 +549,7 @@ function startVoice(idx) {
 function resetAll() {
   document.getElementById('cntInput').value = '';
   document.getElementById('cntError').style.display = 'none';
+  updateCntBtn();
   document.getElementById('step2Card').style.display = 'none';
   document.getElementById('nameList').innerHTML = '';
   document.getElementById('noNameChk').checked = false;
