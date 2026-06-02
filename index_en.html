@@ -27,6 +27,7 @@
   --radius-sm: 9px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { overflow-x: hidden; }
 body {
   font-family: 'Noto Sans JP', sans-serif;
   background: var(--bg); color: var(--text);
@@ -37,6 +38,7 @@ body {
   background: var(--green); color: #fff;
   padding: 48px 20px 18px;
   position: sticky; top: 0; z-index: 10;
+  overflow: hidden;
 }
 .header h1 { font-size: 20px; font-weight: 700; letter-spacing: 0.02em; }
 .header p { font-size: 13px; opacity: 0.8; margin-top: 2px; }
@@ -454,6 +456,7 @@ function getPlayers() {
 function goToDraw() {
   switchTab('draw');
   doDraw(false);
+  updateCostBtn();
 }
 
 function shuffle(arr) {
