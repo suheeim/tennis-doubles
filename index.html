@@ -290,10 +290,7 @@ body {
         oninput="this.value=this.value.replace(/[^0-9]/g,'');calcCost();updateCostBtn()">
       <span style="font-size:14px;color:var(--text3);flex-shrink:0;padding-right:4px">円</span>
     </div>
-    <div id="costResult" style="display:none" class="cost-result">
-      <div class="per-person">¥<span id="perPerson">0</span></div>
-      <div class="label">一人あたり</div>
-    </div>
+  </div>
   </div>
 </div>
 
@@ -339,16 +336,7 @@ var activeRecognition = null;
 var STORAGE_KEY = 'tennis_doubles_v2';
 
 function calcCost() {
-  var cost = parseInt(document.getElementById('costInput').value);
-  var result = document.getElementById('costResult');
-  var perPerson = document.getElementById('perPerson');
-  if (cost && playerCount >= 4) {
-    var pp = Math.ceil(cost / playerCount);
-    perPerson.textContent = pp.toLocaleString();
-    result.style.display = 'block';
-  } else {
-    result.style.display = 'none';
-  }
+  // メイン画面では計算結果を表示しない
 }
 
 function updateCntBtn() {
@@ -439,6 +427,7 @@ function switchTab(name) {
   });
   var resetBtn = document.getElementById('resetBtn');
   if (resetBtn) resetBtn.style.display = name !== 'players' ? 'block' : 'none';
+  if (name === 'draw') updateCostBtn();
   if (name === 'history') renderHistory();
 }
 
