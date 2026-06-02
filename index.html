@@ -316,10 +316,7 @@ body {
 
 <!-- 履歴タブ -->
 <div id="sec-history" class="section">
-  <div class="sec-label">
-    抽選履歴
-    <button onclick="clearHistory()">全削除</button>
-  </div>
+  <div class="sec-label">ペア履歴</div>
   <div id="historyList"></div>
 </div>
 
@@ -329,6 +326,7 @@ body {
 var playerCount = 0;
 var lastDraw = null;
 var drawCount = 0;
+var pairHistory = {}; // ペア履歴 key="A-B" value=回数
 var serveEnabled = false;
 var noNameMode = false;
 var activeRecognition = null;
@@ -480,6 +478,44 @@ function shuffle(arr) {
   return a;
 }
 
+function getPairKey(a, b) {
+  return [a, b].sort().join('|||');
+}
+
+function getPairCount(a, b) {
+  return pairHistory[getPairKey(a, b)] || 0;
+}
+
+function savePairs(courts) {
+  courts.forEach(function(c) {
+    // 同チームのペア
+    var k1 = getPairKey(c[0], c[1]);
+    var k2 = getPairKey(c[2], c[3]);
+    pairHistory[k1] = (pairHistory[k1] || 0) + 1;
+    pairHistory[k2] = (pairHistory[k2] || 0) + 1;
+  });
+}
+
+function shuffleWithPairAvoidance(players) {
+  // 100回試してペア重複が最も少ない組み合わせを選ぶ
+  var best = null;
+  var bestScore = Infinity;
+  for (var attempt = 0; attempt < 100; attempt++) {
+    var shuffled = shuffle(players);
+    var score = 0;
+    for (var i = 0; i + 3 < shuffled.length; i += 4) {
+      score += getPairCount(shuffled[i], shuffled[i+1]);
+      score += getPairCount(shuffled[i+2], shuffled[i+3]);
+    }
+    if (score < bestScore) {
+      bestScore = score;
+      best = shuffled;
+      if (score === 0) break;
+    }
+  }
+  return best;
+}
+
 function doDraw(keepOrder) {
   // 前回結果を保存
   var el = document.getElementById('drawResult');
@@ -509,12 +545,13 @@ function doDraw(keepOrder) {
     courts = lastDraw.courts;
     leftover = lastDraw.leftover;
   } else {
-    var shuffled = shuffle(players);
+    var shuffled = shuffleWithPairAvoidance(players);
     courts = [];
     for (var i = 0; i+3 < shuffled.length; i += 4) {
       courts.push(shuffled.slice(i, i+4));
     }
     leftover = shuffled.slice(courts.length * 4);
+    savePairs(courts);
   }
   lastDraw = { courts: courts, leftover: leftover, time: new Date(), serveIdxes: serveIdxes };
 
@@ -681,7 +718,7 @@ function resetAll() {
   document.getElementById('step2Card').style.display = 'none';
   document.getElementById('nameList').innerHTML = '';
   document.getElementById('noNameChk').checked = false;
-  playerCount = 0; lastDraw = null; serveEnabled = false; noNameMode = false; drawCount = 0;
+  playerCount = 0; lastDraw = null; serveEnabled = false; noNameMode = false; drawCount = 0; pairHistory = {};
   var sb = document.getElementById('serveBtn');
   if (sb) { sb.classList.remove('active'); sb.textContent = '🎾 サーブを自動で決める'; }
   document.getElementById('drawResult').innerHTML = '<div class="empty"><div class="empty-icon">🎾</div>参加者タブで設定して<br>「抽選へ進む」を押してください</div>';
