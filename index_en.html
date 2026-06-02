@@ -301,6 +301,11 @@ body {
       参加者タブで設定して<br>「Start Draw」を押してください
     </div>
   </div>
+  <div id="nextResult" style="display:none;margin-top:16px">
+    <div style="font-size:12px;font-weight:700;color:var(--text3);letter-spacing:.08em;margin-bottom:8px">🔮 Next Round Preview</div>
+    <div id="nextResultBody"></div>
+  </div>
+
   <div id="prevResult" style="display:none;margin-top:16px">
     <div style="font-size:12px;font-weight:700;color:var(--text3);letter-spacing:.08em;margin-bottom:8px">📋 Previous Result</div>
     <div id="prevResultBody"></div>
@@ -554,6 +559,9 @@ function doDraw(keepOrder) {
   }
   lastDraw = { courts: courts, leftover: leftover, time: new Date(), serveIdxes: serveIdxes };
 
+  // 次回プレビュー生成
+  generateNextPreview(players);
+
   if (!keepOrder) drawCount++;
   var colors = ['#1D9E75','#0F6E56','#158A64','#0D7A58','#1A8A68','#0B6048'];
   var roundText = 'Round ' + drawCount + '';
@@ -695,6 +703,10 @@ function resetAll() {
   if (pr) pr.style.display = 'none';
   var pb = document.getElementById('prevResultBody');
   if (pb) pb.innerHTML = '';
+  var nr = document.getElementById('nextResult');
+  if (nr) nr.style.display = 'none';
+  var nb = document.getElementById('nextResultBody');
+  if (nb) nb.innerHTML = '';
   switchTab('players');
   var resetBtn = document.getElementById('resetBtn');
   if (resetBtn) resetBtn.style.display = 'none';
