@@ -386,29 +386,41 @@ function confirmCount() {
 function renderNameList() {
   var list = document.getElementById('nameList');
   var current = list.querySelectorAll('.name-input');
-  var existing = Array.from(current).map(function(i) { return i.value; });
-  var rows = '';
+  var existing = Array.from(current).map(function(inp) { return inp.value; });
+  list.innerHTML = '';
   for (var i = 0; i < playerCount; i++) {
-    var saved = existing[i] ? existing[i].replace(/"/g, '&quot;') : '';
-    rows += '<div class="name-row">'
-      + '<div class="name-num">' + (i+1) + '</div>'
-      + '<input class="name-input" id="p' + i + '" type="text" placeholder="選手 ' + (i+1) + '" maxlength="12" value="' + saved + '">'
-      + '<button class="mic-btn" id="mic' + i + '" onclick="startVoice(' + i + ')">🎤</button>'
-      + '</div>';
-  }
-  list.innerHTML = rows;
-  for (var j = 0; j < playerCount; j++) {
+    var saved = existing[i] || '';
+    var row = document.createElement('div');
+    row.className = 'name-row';
+    var num = document.createElement('div');
+    num.className = 'name-num';
+    num.textContent = String(i + 1);
+    var inp = document.createElement('input');
+    inp.className = 'name-input';
+    inp.id = 'p' + i;
+    inp.type = 'text';
+    inp.placeholder = '選手 ' + String(i + 1);
+    inp.maxLength = 12;
+    inp.value = saved;
     (function(idx) {
-      var inp = document.getElementById('p' + idx);
-      if (inp) {
-        inp.addEventListener('keydown', function(e) {
-          if (e.key === 'Enter' && idx < playerCount - 1) {
-            var next = document.getElementById('p' + (idx + 1));
-            if (next) next.focus();
-          }
-        });
-      }
-    })(j);
+      inp.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && idx < playerCount - 1) {
+          var next = document.getElementById('p' + (idx + 1));
+          if (next) next.focus();
+        }
+      });
+    })(i);
+    var mic = document.createElement('button');
+    mic.className = 'mic-btn';
+    mic.id = 'mic' + i;
+    mic.textContent = '🎤';
+    (function(idx) {
+      mic.addEventListener('click', function() { startVoice(idx); });
+    })(i);
+    row.appendChild(num);
+    row.appendChild(inp);
+    row.appendChild(mic);
+    list.appendChild(row);
   }
 }
 
