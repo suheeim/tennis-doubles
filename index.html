@@ -286,9 +286,9 @@ body {
     <div style="display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 10px;gap:6px">
       <input id="costInput" type="number" inputmode="numeric" pattern="[0-9]*"
         placeholder="例: 3000"
-        style="flex:1;font-size:20px;font-weight:700;color:var(--green);text-align:center;padding:10px 0;border:none;outline:none;background:transparent;font-family:'Noto Sans JP',sans-serif"
+        style="flex:1;font-size:20px;font-weight:700;color:var(--green);text-align:center;padding:10px 0;border:none;outline:none;background:transparent;font-family:'Noto Sans JP',sans-serif;min-width:0"
         oninput="this.value=this.value.replace(/[^0-9]/g,'');calcCost();updateCostBtn()">
-      <span style="font-size:14px;color:var(--text3);flex-shrink:0">円</span>
+      <span style="font-size:14px;color:var(--text3);flex-shrink:0;padding-right:4px">円</span>
     </div>
     <div id="costResult" style="display:none" class="cost-result">
       <div class="per-person">¥<span id="perPerson">0</span></div>
@@ -651,15 +651,18 @@ function startVoice(idx) {
 }
 
 function resetAll() {
-  document.getElementById('cntInput').value = '';
-  document.getElementById('costInput').value = '';
+  var cntInput = document.getElementById('cntInput');
+  if (cntInput) cntInput.value = '';
+  var costInput = document.getElementById('costInput');
+  if (costInput) costInput.value = '';
   var cr = document.getElementById('costResult');
   if (cr) cr.style.display = 'none';
   var crd = document.getElementById('costResultDraw');
   if (crd) crd.style.display = 'none';
-  updateCostBtn();
-  document.getElementById('cntError').style.display = 'none';
-  updateCntBtn();
+  try { updateCostBtn(); } catch(e) {}
+  var cntError = document.getElementById('cntError');
+  if (cntError) cntError.style.display = 'none';
+  try { updateCntBtn(); } catch(e) {}
   document.getElementById('step2Card').style.display = 'none';
   document.getElementById('nameList').innerHTML = '';
   document.getElementById('noNameChk').checked = false;
