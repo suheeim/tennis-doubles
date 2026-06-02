@@ -231,11 +231,6 @@ body {
       <h1>🎾 ダブルス抽選</h1>
       <p>テニスダブルスのコートを自動組み合わせ</p>
     </div>
-<div style="display:flex;background:var(--surface);border-bottom:1px solid var(--border)">
-  <button id="tab-players" onclick="switchTab('players')" style="flex:1;padding:12px 4px;border:none;background:none;font-size:13px;font-weight:700;color:var(--green);border-bottom:2px solid var(--green);cursor:pointer;font-family:'Noto Sans JP',sans-serif">参加者</button>
-  <button id="tab-draw" onclick="switchTab('draw')" style="flex:1;padding:12px 4px;border:none;background:none;font-size:13px;font-weight:500;color:var(--text3);border-bottom:2px solid transparent;cursor:pointer;font-family:'Noto Sans JP',sans-serif">抽選</button>
-  <button id="tab-history" onclick="switchTab('history')" style="flex:1;padding:12px 4px;border:none;background:none;font-size:13px;font-weight:500;color:var(--text3);border-bottom:2px solid transparent;cursor:pointer;font-family:'Noto Sans JP',sans-serif">ペア履歴</button>
-</div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
       <a href="index_en.html" style="color:rgba(255,255,255,0.8);font-size:11px;text-decoration:underline;font-family:'Noto Sans JP',sans-serif">English</a>
       <button id="resetBtn" onclick="resetAll()" style="display:none;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;white-space:nowrap">
@@ -245,8 +240,21 @@ body {
   </div>
 </div>
 
-
+<div style="display:flex;background:var(--surface);border-bottom:1px solid var(--border)">
+  <button id="tab-players" onclick="switchTab('players')" style="flex:1;padding:12px 4px;border:none;background:none;font-size:13px;font-weight:700;color:var(--green);border-bottom:2px solid var(--green);cursor:pointer;font-family:'Noto Sans JP',sans-serif">参加者</button>
+  <button id="tab-draw" onclick="switchTab('draw')" style="flex:1;padding:12px 4px;border:none;background:none;font-size:13px;font-weight:500;color:var(--text3);border-bottom:2px solid transparent;cursor:pointer;font-family:'Noto Sans JP',sans-serif">抽選</button>
+  <button id="tab-history" onclick="switchTab('history')" style="flex:1;padding:12px 4px;border:none;background:none;font-size:13px;font-weight:500;color:var(--text3);border-bottom:2px solid transparent;cursor:pointer;font-family:'Noto Sans JP',sans-serif">ペア履歴</button>
 </div>
+
+<!-- 参加者タブ -->
+<div id="sec-players" class="section active">
+  <label class="check-row">
+    <input type="checkbox" id="noNameChk" onchange="onNoNameChange()">
+    <span style="font-size:15px;font-weight:500;color:var(--text)">名前入力不要（番号のみ）</span>
+    <span>番号で抽選</span>
+  </label>
+  <div class="step-card">
+    <div class="step-title"><span class="step-num">1</span>参加人数を入力</div>
     <div style="display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 10px;gap:6px">
       <input id="cntInput" type="number" inputmode="numeric" pattern="[0-9]*"
         min="4" max="30" placeholder="例: 8"
