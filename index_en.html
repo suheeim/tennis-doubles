@@ -232,6 +232,11 @@ body {
       <h1>🎾 Doubles Draw</h1>
       <p>Auto court assignment for tennis doubles</p>
     </div>
+<div style="display:flex;background:var(--surface);border-bottom:1px solid var(--border)">
+  <button id="tab-players" onclick="switchTab('players')" style="flex:1;padding:12px 4px;border:none;background:none;font-size:13px;font-weight:700;color:var(--green);border-bottom:2px solid var(--green);cursor:pointer;font-family:'Noto Sans JP',sans-serif">Players</button>
+  <button id="tab-draw" onclick="switchTab('draw')" style="flex:1;padding:12px 4px;border:none;background:none;font-size:13px;font-weight:500;color:var(--text3);border-bottom:2px solid transparent;cursor:pointer;font-family:'Noto Sans JP',sans-serif">Draw</button>
+  <button id="tab-history" onclick="switchTab('history')" style="flex:1;padding:12px 4px;border:none;background:none;font-size:13px;font-weight:500;color:var(--text3);border-bottom:2px solid transparent;cursor:pointer;font-family:'Noto Sans JP',sans-serif">Pair History</button>
+</div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
       <a href="index.html" style="color:rgba(255,255,255,0.8);font-size:11px;text-decoration:underline;font-family:'Noto Sans JP',sans-serif">日本語</a>
       <button id="resetBtn" onclick="resetAll()" style="display:none;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;white-space:nowrap">
@@ -243,25 +248,6 @@ body {
 
 
 </div>
-<div style="display:flex;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:9">
-  <button id="tab-players" onclick="switchTab('players')" style="flex:1;padding:12px 4px;border:none;background:none;font-size:13px;font-weight:700;color:var(--green);border-bottom:2px solid var(--green);cursor:pointer;font-family:'Noto Sans JP',sans-serif">Players</button>
-  <button id="tab-draw" onclick="switchTab('draw')" style="flex:1;padding:12px 4px;border:none;background:none;font-size:13px;font-weight:500;color:var(--text3);border-bottom:2px solid transparent;cursor:pointer;font-family:'Noto Sans JP',sans-serif">Draw</button>
-  <button id="tab-history" onclick="switchTab('history')" style="flex:1;padding:12px 4px;border:none;background:none;font-size:13px;font-weight:500;color:var(--text3);border-bottom:2px solid transparent;cursor:pointer;font-family:'Noto Sans JP',sans-serif">Pair History</button>
-
-
-<!-- 参加者タブ -->
-<div id="sec-players" class="section active">
-
-  <!-- 名前入力不要チェック -->
-  <label class="check-row">
-    <input type="checkbox" id="noNameChk" onchange="onNoNameChange()">
-    <span style="font-size:15px;font-weight:500;color:var(--text)">No names (numbers only)</span>
-    <span>Draw by number</span>
-  </label>
-
-  <!-- STEP 1: 人数入力 -->
-  <div class="step-card">
-    <div class="step-title"><span class="step-num">1</span>Enter number of players</div>
     <div style="display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 10px;gap:6px">
       <input id="cntInput" type="number" inputmode="numeric" pattern="[0-9]*"
         min="4" max="30" placeholder="e.g. 8"
@@ -733,24 +719,19 @@ function loadHistory() {
 
 function renderHistory() {
   var list = document.getElementById('historyList');
-  var history = loadHistory();
-  if (history.length === 0) {
-    list.innerHTML = '<div class="empty"><div class="empty-icon">🕐</div>No history yet.<br>Save after drawing.</div>';
+  if (Object.keys(pairHistory).length === 0) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">🤝</div>No history yet.<br>Draw to start recording.</div>';
     return;
   }
-  var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  list.innerHTML = history.map(function(h, idx) {
-    var d = new Date(h.time);
-    var ds = (d.getMonth()+1) + '/' + d.getDate() + '（' + days[d.getDay()] + '）' + d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0');
-    var courts = h.courts.map(function(c, i) {
-      return '<div class="history-line">🎾 コート' + (i+1) + ': ' + c[0] + '・' + c[1] + ' <b>vs</b> ' + c[2] + '・' + c[3] + '</div>';
-    }).join('');
-    var lo = (h.leftover && h.leftover.length)
-      ? '<div class="history-line" style="color:var(--text3)">⏸ Waiting: ' + h.leftover.join('・') + '</div>' : '';
-    return '<div class="history-card">'
-      + '<div class="history-head"><span class="history-date">📅 ' + ds + '</span>'
-      + '<button class="history-del" onclick="deleteHistory(' + idx + ')">×</button></div>'
-      + courts + lo + '</div>';
+  var pairs = Object.keys(pairHistory).map(function(key) {
+    var names = key.split('|||');
+    return { a: names[0], b: names[1], count: pairHistory[key] };
+  }).sort(function(x, y) { return y.count - x.count; });
+  list.innerHTML = pairs.map(function(p) {
+    return '<div class="history-card" style="display:flex;justify-content:space-between;align-items:center">'
+      + '<span style="font-size:14px;color:var(--text)">' + p.a + ' ＆ ' + p.b + '</span>'
+      + '<span style="font-size:13px;font-weight:700;color:var(--green);background:var(--green-light);padding:3px 10px;border-radius:20px">' + p.count + 'times' + '</span>'
+      + '</div>';
   }).join('');
 }
 
