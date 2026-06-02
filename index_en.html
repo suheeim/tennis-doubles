@@ -698,5 +698,19 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+<script>
+function showCostResult() {
+  var cost = parseInt(document.getElementById('costInput').value);
+  var resultDiv = document.getElementById('costResultDraw');
+  var perPersonEl = document.getElementById('perPersonDraw');
+  if (!cost || playerCount < 4) {
+    alert( + no_cost + );
+    return;
+  }
+  var pp = Math.ceil(cost / playerCount);
+  perPersonEl.textContent = pp.toLocaleString();
+  resultDiv.style.display = resultDiv.style.display === 'none' ? 'block' : 'none';
+}
+</script>
 </body>
 </html>
