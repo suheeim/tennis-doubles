@@ -339,6 +339,16 @@ function calcCost() {
 
 function updateCntBtn() {}
 
+function updateCostBtn() {
+  var cost = parseInt(document.getElementById('costInput').value);
+  var btn = document.getElementById('costBtn');
+  if (!btn) return;
+  var ok = cost && cost > 0;
+  btn.disabled = !ok;
+  btn.style.opacity = ok ? '1' : '0.4';
+  btn.style.cursor = ok ? 'pointer' : 'not-allowed';
+}
+
 function onNoNameChange() {
   noNameMode = document.getElementById('noNameChk').checked;
   confirmCount();
