@@ -823,5 +823,32 @@ function showCostResult() {
   resultDiv.style.display = 'block';
 }
 </script>
+<script>
+function generateNextPreview(players) {
+  var nextArea = document.getElementById('nextResult');
+  var nextBody = document.getElementById('nextResultBody');
+  if (!nextArea || !nextBody) return;
+  if (players.length < 4) { nextArea.style.display = "none"; return; }
+  var nextShuffled = shuffleWithPairAvoidance(players);
+  var nextCourts = [];
+  for (var i = 0; i + 3 < nextShuffled.length; i += 4) {
+    nextCourts.push(nextShuffled.slice(i, i+4));
+  }
+  var nextLeftover = nextShuffled.slice(nextCourts.length * 4);
+  var colors = ['#1D9E75','#0F6E56','#158A64','#0D7A58','#1A8A68','#0B6048'];
+  var html = "";
+  nextCourts.forEach(function(c, i) {
+    var col = colors[i % colors.length];
+    html += "<div style=\"border-left:3px solid " + col + ";padding:6px 10px;margin-bottom:6px;font-size:13px;color:var(--text2)\">"
+      + c[0] + " ・ " + c[1] + " <span style=\"color:var(--text3);font-weight:700\">vs</span> " + c[2] + " ・ " + c[3]
+      + "</div>";
+  });
+  if (nextLeftover.length > 0) {
+    html += "<div style=\"font-size:12px;color:var(--text3);margin-top:2px\">⏸ 待機: " + nextLeftover.join("・") + "</div>";
+  }
+  nextBody.innerHTML = html;
+  nextArea.style.display = "block";
+}
+</script>
 </body>
 </html>
