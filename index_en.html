@@ -334,6 +334,7 @@ var playerCount = 0;
 var lastDraw = null;
 var drawCount = 0;
 var pairHistory = {}; // ペア履歴 key="A-B" value=回数
+var gameHistory = []; // 試合履歴
 var serveEnabled = false;
 var noNameMode = false;
 var activeRecognition = null;
@@ -493,12 +494,12 @@ function getPairCount(a, b) {
 
 function savePairs(courts) {
   courts.forEach(function(c) {
-    // 同チームのペア
     var k1 = getPairKey(c[0], c[1]);
     var k2 = getPairKey(c[2], c[3]);
     pairHistory[k1] = (pairHistory[k1] || 0) + 1;
     pairHistory[k2] = (pairHistory[k2] || 0) + 1;
   });
+  gameHistory.push({ round: drawCount, courts: courts });
 }
 
 function shuffleWithPairAvoidance(players) {
@@ -693,7 +694,7 @@ function resetAll() {
   document.getElementById('step2Card').style.display = 'none';
   document.getElementById('nameList').innerHTML = '';
   document.getElementById('noNameChk').checked = false;
-  playerCount = 0; lastDraw = null; serveEnabled = false; noNameMode = false; drawCount = 0; pairHistory = {};
+  playerCount = 0; lastDraw = null; serveEnabled = false; noNameMode = false; drawCount = 0; pairHistory = {}; gameHistory = [];
   var sb = document.getElementById('serveBtn');
   if (sb) { sb.classList.remove('active'); sb.textContent = '🎾 Auto decide serve'; }
   document.getElementById('drawResult').innerHTML = '<div class="empty"><div class="empty-icon">🎾</div>参加者タブで設定して<br>「Start Draw」を押してください</div>';
@@ -727,20 +728,20 @@ function loadHistory() {
 
 function renderHistory() {
   var list = document.getElementById('historyList');
-  if (Object.keys(pairHistory).length === 0) {
+  if (gameHistory.length === 0) {
     list.innerHTML = '<div class="empty"><div class="empty-icon">🤝</div>No history yet.<br>Draw to start recording.</div>';
     return;
   }
-  var pairs = Object.keys(pairHistory).map(function(key) {
-    var names = key.split('|||');
-    return { a: names[0], b: names[1], count: pairHistory[key] };
-  }).sort(function(x, y) { return y.count - x.count; });
-  list.innerHTML = pairs.map(function(p) {
-    return '<div class="history-card" style="display:flex;justify-content:space-between;align-items:center">'
-      + '<span style="font-size:14px;color:var(--text)">' + p.a + ' ＆ ' + p.b + '</span>'
-      + '<span style="font-size:13px;font-weight:700;color:var(--green);background:var(--green-light);padding:3px 10px;border-radius:20px">' + p.count + 'times' + '</span>'
-      + '</div>';
-  }).join('');
+  var html = "";
+  gameHistory.slice().reverse().forEach(function(g) {
+    g.courts.forEach(function(c) {
+      html += '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)">'
+        + '<span style="font-size:11px;font-weight:700;color:var(--green);white-space:nowrap;min-width:36px">Round' + g.round + '</span>'
+        + '<span style="font-size:14px;color:var(--text)">' + c[0] + '・' + c[1] + ' <span style="color:var(--text3);font-weight:700">vs</span> ' + c[2] + '・' + c[3] + '</span>'
+        + '</div>';
+    });
+  });
+  list.innerHTML = html;
 }
 
 function deleteHistory(idx) {
