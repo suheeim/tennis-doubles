@@ -336,6 +336,7 @@ var playerCount = 0;
 var lastDraw = null;
 var drawCount = 0;
 var pairHistory = {}; // ペア履歴 key="A-B" value=回数
+var serveHistory = {}; // サーブ履歴 key=名前 value=回数
 var gameHistory = []; // 試合履歴
 var serveEnabled = false;
 var noNameMode = false;
@@ -558,22 +559,32 @@ function doDraw(keepOrder) {
       courts.push(shuffled.slice(i, i+4));
     }
     leftover = shuffled.slice(courts.length * 4);
+    if (!keepOrder) drawCount++;
     savePairs(courts, drawCount);
   }
   lastDraw = { courts: courts, leftover: leftover, time: new Date(), serveIdxes: serveIdxes, round: drawCount };
 
   // 次回プレビュー生成
   generateNextPreview(players);
-
-  if (!keepOrder) drawCount++;
   var colors = ['#1D9E75','#0F6E56','#158A64','#0D7A58','#1A8A68','#0B6048'];
   var roundText = '第 ' + drawCount + '回';
   var html = '<div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px;text-align:center;letter-spacing:.05em">' + roundText + '</div>';
 
   var serveIdxes = [];
   courts.forEach(function(c, i) {
-    var serveIdx = serveEnabled ? Math.floor(Math.random() * 4) : -1;
+    var serveIdx = -1;
+    if (serveEnabled) {
+      // サーブ回数が最も少ない人を選ぶ
+      var minCount = Infinity;
+      for (var si = 0; si < 4; si++) {
+        var cnt = serveHistory[c[si]] || 0;
+        if (cnt < minCount) { minCount = cnt; serveIdx = si; }
+      }
+    }
     serveIdxes.push(serveIdx);
+    if (serveEnabled && serveIdx >= 0) {
+      serveHistory[c[serveIdx]] = (serveHistory[c[serveIdx]] || 0) + 1;
+    }
     var col = colors[i % colors.length];
 
     function pname(name, idx) {
@@ -728,7 +739,7 @@ function resetAll() {
   document.getElementById('step2Card').style.display = 'none';
   document.getElementById('nameList').innerHTML = '';
   document.getElementById('noNameChk').checked = false;
-  playerCount = 0; lastDraw = null; serveEnabled = false; noNameMode = false; drawCount = 0; pairHistory = {}; gameHistory = [];
+  playerCount = 0; lastDraw = null; serveEnabled = false; noNameMode = false; drawCount = 0; pairHistory = {}; gameHistory = []; serveHistory = {};
   var sb = document.getElementById('serveBtn');
   if (sb) { sb.classList.remove('active'); sb.textContent = '🎾 サーブを自動で決める'; }
   document.getElementById('drawResult').innerHTML = '<div class="empty"><div class="empty-icon">🎾</div>参加者タブで設定して<br>「抽選へ進む」を押してください</div>';
