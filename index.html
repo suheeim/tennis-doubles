@@ -300,14 +300,17 @@ body {
       参加者タブで設定して<br>「抽選へ進む」を押してください
     </div>
   </div>
-  <div id="nextResult" style="display:none;margin-top:16px">
-    <div style="font-size:12px;font-weight:700;color:var(--text3);letter-spacing:.08em;margin-bottom:8px">🔮 次回予定</div>
-    <div id="nextResultBody"></div>
-  </div>
-
-  <div id="prevResult" style="display:none;margin-top:16px">
-    <div style="font-size:12px;font-weight:700;color:var(--text3);letter-spacing:.08em;margin-bottom:8px">📋 前回の結果</div>
-    <div id="prevResultBody"></div>
+  <div id="prevNextArea" style="display:none;margin-top:16px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px">
+        <div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.08em;margin-bottom:6px">📋 前回</div>
+        <div id="prevResultBody" style="font-size:12px"></div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--green);border-radius:var(--radius-sm);padding:10px">
+        <div style="font-size:11px;font-weight:700;color:var(--green);letter-spacing:.08em;margin-bottom:6px">🔮 次回予定</div>
+        <div id="nextResultBody" style="font-size:12px"></div>
+      </div>
+    </div>
   </div>
   <button class="btn-primary" onclick="doDraw(false)">🔀 再抽選</button>
   <button class="serve-btn" id="serveBtn" onclick="toggleServe()">🎾 サーブを自動で決める</button>
@@ -524,13 +527,10 @@ function shuffleWithPairAvoidance(players) {
 function doDraw(keepOrder) {
   // 前回結果を保存
   var el = document.getElementById('drawResult');
-  var prevArea = document.getElementById('prevResult');
+  var prevNextArea = document.getElementById('prevNextArea');
   var prevBody = document.getElementById('prevResultBody');
-  var prevLabel = document.getElementById('prevToggleLabel');
   if (!keepOrder && lastDraw && lastDraw.simpleHtml) {
     prevBody.innerHTML = lastDraw.simpleHtml;
-    prevArea.style.display = 'block';
-
   }
   var players = noNameMode
     ? (function() {
@@ -730,12 +730,10 @@ function resetAll() {
   var sb = document.getElementById('serveBtn');
   if (sb) { sb.classList.remove('active'); sb.textContent = '🎾 サーブを自動で決める'; }
   document.getElementById('drawResult').innerHTML = '<div class="empty"><div class="empty-icon">🎾</div>参加者タブで設定して<br>「抽選へ進む」を押してください</div>';
-  var pr = document.getElementById('prevResult');
-  if (pr) pr.style.display = 'none';
+  var pna = document.getElementById('prevNextArea');
+  if (pna) pna.style.display = 'none';
   var pb = document.getElementById('prevResultBody');
   if (pb) pb.innerHTML = '';
-  var nr = document.getElementById('nextResult');
-  if (nr) nr.style.display = 'none';
   var nb = document.getElementById('nextResultBody');
   if (nb) nb.innerHTML = '';
   switchTab('players');
@@ -827,8 +825,8 @@ function showCostResult() {
 function generateNextPreview(players) {
   var nextArea = document.getElementById('nextResult');
   var nextBody = document.getElementById('nextResultBody');
-  if (!nextArea || !nextBody) return;
-  if (players.length < 4) { nextArea.style.display = "none"; return; }
+  if (!nextBody) return;
+  if (players.length < 4) return;
   var nextShuffled = shuffleWithPairAvoidance(players);
   var nextCourts = [];
   for (var i = 0; i + 3 < nextShuffled.length; i += 4) {
