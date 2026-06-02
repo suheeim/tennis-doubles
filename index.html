@@ -241,6 +241,13 @@ body {
 </div>
 
 
+</div>
+<div style="display:flex;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:9">
+  <button id="tab-players" onclick="switchTab('players')" style="flex:1;padding:12px 4px;border:none;background:none;font-size:13px;font-weight:700;color:var(--green);border-bottom:2px solid var(--green);cursor:pointer;font-family:'Noto Sans JP',sans-serif">参加者</button>
+  <button id="tab-draw" onclick="switchTab('draw')" style="flex:1;padding:12px 4px;border:none;background:none;font-size:13px;font-weight:500;color:var(--text3);border-bottom:2px solid transparent;cursor:pointer;font-family:'Noto Sans JP',sans-serif">抽選</button>
+  <button id="tab-history" onclick="switchTab('history')" style="flex:1;padding:12px 4px;border:none;background:none;font-size:13px;font-weight:500;color:var(--text3);border-bottom:2px solid transparent;cursor:pointer;font-family:'Noto Sans JP',sans-serif">ペア履歴</button>
+
+
 <!-- 参加者タブ -->
 <div id="sec-players" class="section active">
 
