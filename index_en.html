@@ -282,10 +282,10 @@ body {
   <div class="step-card" style="margin-top:14px">
     <div class="step-title">💴 Court Fee (optional)</div>
     <div style="display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 10px;gap:6px">
-      <input id="costInput" type="number" inputmode="numeric" pattern="[0-9]*"
-        placeholder="e.g. 3000"
+      <input id="costInput" type="text" inputmode="numeric" pattern="[0-9,]*"
+        placeholder="e.g. 3,000"
         style="flex:1;font-size:20px;font-weight:700;color:var(--green);text-align:center;padding:10px 0;border:none;outline:none;background:transparent;font-family:'Noto Sans JP',sans-serif;min-width:0"
-        oninput="this.value=this.value.replace(/[^0-9]/g,'');calcCost();updateCostBtn()">
+        oninput="formatCostInput(this);calcCost();updateCostBtn()">
       <span style="font-size:14px;color:var(--text3);flex-shrink:0;padding-right:4px">JPY</span>
     </div>
   </div>
@@ -308,9 +308,10 @@ body {
   <button class="btn-primary" onclick="doDraw(false)">🔀 Redraw</button>
   <button class="serve-btn" id="serveBtn" onclick="toggleServe()">🎾 Auto decide serve</button>
   <button class="serve-btn" onclick="showCostResult()" id="costBtn" disabled style="opacity:0.4;cursor:not-allowed">💴 Show Cost per Person</button>
-  <div id="costResultDraw" style="display:none;background:var(--green-light);border:1px solid var(--green);border-radius:var(--radius-sm);padding:12px;margin-top:8px;text-align:center">
-    <div style="font-size:24px;font-weight:700;color:var(--green-dark)">¥<span id="perPersonDraw">0</span></div>
+  <div id="costResultDraw" style="display:none;background:var(--green-light);border:1px solid var(--green);border-radius:var(--radius-sm);padding:14px;margin-top:8px;text-align:center">
+    <div style="font-size:28px;font-weight:700;color:var(--green-dark)">¥<span id="perPersonDraw">0</span></div>
     <div style="font-size:12px;color:var(--green-dark);margin-top:2px">per person</div>
+    <div id="costTotalDraw" style="font-size:12px;color:var(--green-dark);opacity:0.7;margin-top:6px"></div>
   </div>
 </div>
 
@@ -328,6 +329,7 @@ body {
 <script>
 var playerCount = 0;
 var lastDraw = null;
+var drawCount = 0;
 var serveEnabled = false;
 var noNameMode = false;
 var activeRecognition = null;
@@ -339,8 +341,20 @@ function calcCost() {
 
 function updateCntBtn() {}
 
+function formatCostInput(el) {
+  var raw = el.value.replace(/[^0-9]/g, '');
+  if (raw === '') { el.value = ''; return; }
+  el.value = parseInt(raw, 10).toLocaleString();
+}
+
+function getCostValue() {
+  var el = document.getElementById('costInput');
+  if (!el) return 0;
+  return parseInt(el.value.replace(/[^0-9]/g, ''), 10) || 0;
+}
+
 function updateCostBtn() {
-  var cost = parseInt(document.getElementById('costInput').value);
+  var cost = getCostValue();
   var btn = document.getElementById('costBtn');
   if (!btn) return;
   var ok = cost && cost > 0;
@@ -444,7 +458,8 @@ function getPlayers() {
   for (var i = 0; i < playerCount; i++) {
     var el = document.getElementById('p' + i);
     var v = el ? el.value.trim() : '';
-    result.push(v || ('Player ' + (i+1)));
+    var label = v ? (String(i+1) + ' ' + v) : String(i+1);
+    result.push(label);
   }
   return result;
 }
@@ -478,7 +493,7 @@ function doDraw(keepOrder) {
   var players = noNameMode
     ? (function() {
         var arr = [];
-        for (var i = 0; i < playerCount; i++) arr.push('Player ' + (i+1));
+        for (var i = 0; i < playerCount; i++) arr.push(String(i+1));
         return arr;
       })()
     : getPlayers();
@@ -502,8 +517,10 @@ function doDraw(keepOrder) {
   }
   lastDraw = { courts: courts, leftover: leftover, time: new Date(), serveIdxes: serveIdxes };
 
+  if (!keepOrder) drawCount++;
   var colors = ['#1D9E75','#0F6E56','#158A64','#0D7A58','#1A8A68','#0B6048'];
-  var html = '';
+  var roundText = 'Round ' + drawCount + '';
+  var html = '<div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px;text-align:center;letter-spacing:.05em">' + roundText + '</div>';
 
   var serveIdxes = [];
   courts.forEach(function(c, i) {
@@ -633,7 +650,7 @@ function resetAll() {
   document.getElementById('step2Card').style.display = 'none';
   document.getElementById('nameList').innerHTML = '';
   document.getElementById('noNameChk').checked = false;
-  playerCount = 0; lastDraw = null; serveEnabled = false; noNameMode = false;
+  playerCount = 0; lastDraw = null; serveEnabled = false; noNameMode = false; drawCount = 0;
   var sb = document.getElementById('serveBtn');
   if (sb) { sb.classList.remove('active'); sb.textContent = '🎾 Auto decide serve'; }
   document.getElementById('drawResult').innerHTML = '<div class="empty"><div class="empty-icon">🎾</div>参加者タブで設定して<br>「Start Draw」を押してください</div>';
@@ -712,17 +729,17 @@ if ('serviceWorker' in navigator) {
 </script>
 <script>
 function showCostResult() {
-  var costEl = document.getElementById('costInput');
   var resultDiv = document.getElementById('costResultDraw');
   var perPersonEl = document.getElementById('perPersonDraw');
-  if (!costEl) return;
-  var cost = parseInt(costEl.value);
+  var cost = getCostValue();
   if (!cost || playerCount < 4) {
     alert('Please enter court fee first');
     return;
   }
   var pp = Math.ceil(cost / playerCount);
   perPersonEl.textContent = pp.toLocaleString();
+  var totalEl = document.getElementById('costTotalDraw');
+  if (totalEl) totalEl.textContent = '¥' + pp.toLocaleString() + ' × ' + playerCount + ' = ¥' + (pp * playerCount).toLocaleString();
   resultDiv.style.display = 'block';
 }
 </script>
