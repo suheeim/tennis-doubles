@@ -364,9 +364,12 @@ function confirmCount() {
   playerCount = val;
   calcCost();
   if (goBtn) { goBtn.disabled = false; goBtn.style.opacity = '1'; goBtn.style.cursor = 'pointer'; }
-  if (noNameMode) { step2.style.display = 'none'; return; }
-  renderNameList();
-  step2.style.display = 'block';
+  if (noNameMode) {
+    step2.style.display = 'none';
+  } else {
+    renderNameList();
+    step2.style.display = 'block';
+  }
 }
 
 
