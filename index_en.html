@@ -555,8 +555,8 @@ function doDraw(keepOrder) {
       courts.push(shuffled.slice(i, i+4));
     }
     leftover = shuffled.slice(courts.length * 4);
+    savePairs(courts, drawCount + 1);
     if (!keepOrder) drawCount++;
-    savePairs(courts, drawCount);
   }
   lastDraw = { courts: courts, leftover: leftover, time: new Date(), serveIdxes: serveIdxes, round: drawCount };
 
