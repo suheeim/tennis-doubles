@@ -496,14 +496,14 @@ function getPairCount(a, b) {
   return pairHistory[getPairKey(a, b)] || 0;
 }
 
-function savePairs(courts) {
+function savePairs(courts, round) {
   courts.forEach(function(c) {
     var k1 = getPairKey(c[0], c[1]);
     var k2 = getPairKey(c[2], c[3]);
     pairHistory[k1] = (pairHistory[k1] || 0) + 1;
     pairHistory[k2] = (pairHistory[k2] || 0) + 1;
   });
-  gameHistory.push({ round: drawCount, courts: courts });
+  gameHistory.push({ round: round, courts: JSON.parse(JSON.stringify(courts)) });
 }
 
 function shuffleWithPairAvoidance(players) {
@@ -558,9 +558,9 @@ function doDraw(keepOrder) {
       courts.push(shuffled.slice(i, i+4));
     }
     leftover = shuffled.slice(courts.length * 4);
-    savePairs(courts);
+    savePairs(courts, drawCount);
   }
-  lastDraw = { courts: courts, leftover: leftover, time: new Date(), serveIdxes: serveIdxes };
+  lastDraw = { courts: courts, leftover: leftover, time: new Date(), serveIdxes: serveIdxes, round: drawCount };
 
   // 次回プレビュー生成
   generateNextPreview(players);
@@ -833,13 +833,14 @@ function generateNextPreview(players) {
   var html = "";
   nextCourts.forEach(function(c, i) {
     var col = colors[i % colors.length];
+    var nextServeIdx = serveEnabled ? Math.floor(Math.random() * 4) : -1;
+    function npname(name, idx) {
+      return serveEnabled && idx === nextServeIdx ? '<strong style="color:' + col + '">🎾' + name + '</strong>' : name;
+    }
     html += "<div style=\"border-left:3px solid " + col + ";padding:6px 10px;margin-bottom:6px;font-size:13px;color:var(--text2)\">"
-      + c[0] + " ・ " + c[1] + " <span style=\"color:var(--text3);font-weight:700\">vs</span> " + c[2] + " ・ " + c[3]
+      + npname(c[0],0) + " ・ " + npname(c[1],1) + " <span style=\"color:var(--text3);font-weight:700\">vs</span> " + npname(c[2],2) + " ・ " + npname(c[3],3)
       + "</div>";
   });
-  if (nextLeftover.length > 0) {
-    html += "<div style=\"font-size:12px;color:var(--text3);margin-top:2px\">⏸ 待機: " + nextLeftover.join("・") + "</div>";
-  }
   nextBody.innerHTML = html;
   var pna = document.getElementById('prevNextArea');
   if (pna) pna.style.display = 'block';
