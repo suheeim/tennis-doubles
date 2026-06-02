@@ -255,17 +255,14 @@ body {
   <!-- STEP 1: 人数入力 -->
   <div class="step-card">
     <div class="step-title"><span class="step-num">1</span>Enter number of players</div>
-    <div style="display:flex;align-items:center;gap:8px">
-      <div style="flex:1;display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 10px;gap:6px">
-        <input id="cntInput" type="number" inputmode="numeric" pattern="[0-9]*"
-          min="4" max="30" placeholder="e.g. 8"
-          style="flex:1;font-size:22px;font-weight:700;color:var(--green);text-align:center;padding:10px 0;border:none;outline:none;background:transparent;font-family:'Noto Sans JP',sans-serif"
-          oninput="this.value=this.value.replace(/[^0-9]/g,'');updateCntBtn()"
-          onkeydown="if(event.key==='Enter')confirmCount()">
-        <span style="font-size:14px;color:var(--text3)">人</span>
-        <button class="mic-btn" id="micCount" onclick="startVoiceCount()" title="Voice input">🎤</button>
-      </div>
-      <button id="cntOkBtn" class="cnt-ok-btn" onclick="confirmCount()" disabled style="opacity:0.4;cursor:not-allowed">OK</button>
+    <div style="display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 10px;gap:6px">
+      <input id="cntInput" type="number" inputmode="numeric" pattern="[0-9]*"
+        min="4" max="30" placeholder="e.g. 8"
+        style="flex:1;font-size:22px;font-weight:700;color:var(--green);text-align:center;padding:10px 0;border:none;outline:none;background:transparent;font-family:'Noto Sans JP',sans-serif"
+        oninput="this.value=this.value.replace(/[^0-9]/g,'');confirmCount()"
+        onkeydown="if(event.key==='Enter')confirmCount()">
+      <span style="font-size:14px;color:var(--text3)">人</span>
+      <button class="mic-btn" id="micCount" onclick="startVoiceCount()" title="Voice input">🎤</button>
     </div>
     <div id="cntError" style="font-size:12px;color:var(--amber);margin-top:8px;display:none"></div>
   </div>
@@ -340,23 +337,11 @@ function calcCost() {
   // メイン画面では計算結果を表示しない
 }
 
-function updateCntBtn() {
-  var val = parseInt(document.getElementById('cntInput').value);
-  var ok = val && val >= 4 && val <= 30;
-  var okBtn = document.getElementById('cntOkBtn');
-  if (okBtn) { okBtn.disabled = !ok; okBtn.style.opacity = ok ? '1' : '0.4'; okBtn.style.cursor = ok ? 'pointer' : 'not-allowed'; }
-  var goBtn = document.getElementById('goDrawBtn');
-  if (goBtn) { goBtn.disabled = !ok; goBtn.style.opacity = ok ? '1' : '0.4'; goBtn.style.cursor = ok ? 'pointer' : 'not-allowed'; }
-}
+function updateCntBtn() {}
 
 function onNoNameChange() {
   noNameMode = document.getElementById('noNameChk').checked;
-  if (noNameMode) {
-    document.getElementById('step2Card').style.display = 'none';
-  } else if (playerCount >= 4) {
-    renderNameList();
-    document.getElementById('step2Card').style.display = 'block';
-  }
+  confirmCount();
 }
 
 function confirmCount() {
