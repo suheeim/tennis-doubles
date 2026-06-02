@@ -209,6 +209,13 @@ body {
 .history-line { font-size: 13px; color: var(--text2); padding: 2px 0; }
 .empty { text-align: center; padding: 40px 20px; color: var(--text3); font-size: 14px; line-height: 1.8; }
 .empty-icon { font-size: 40px; margin-bottom: 10px; }
+.cost-result {
+  background: var(--green-light); border: 1px solid var(--green);
+  border-radius: var(--radius-sm); padding: 12px 16px;
+  margin-top: 10px; text-align: center;
+}
+.cost-result .per-person { font-size: 22px; font-weight: 700; color: var(--green-dark); }
+.cost-result .label { font-size: 12px; color: var(--green-dark); margin-top: 2px; }
 </style>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -271,6 +278,22 @@ body {
     style="opacity:0.4;cursor:not-allowed">
     <span>🔀</span> Start Draw
   </button>
+
+  <!-- コートレンタル費用 -->
+  <div class="step-card" style="margin-top:14px">
+    <div class="step-title">💴 Court Fee (optional)</div>
+    <div style="display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 10px;gap:6px">
+      <input id="costInput" type="number" inputmode="numeric" pattern="[0-9]*"
+        placeholder="e.g. 3000"
+        style="flex:1;font-size:20px;font-weight:700;color:var(--green);text-align:center;padding:10px 0;border:none;outline:none;background:transparent;font-family:'Noto Sans JP',sans-serif"
+        oninput="this.value=this.value.replace(/[^0-9]/g,'');calcCost();updateCostBtn()">
+      <span style="font-size:14px;color:var(--text3);flex-shrink:0">JPY</span>
+    </div>
+    <div id="costResult" style="display:none" class="cost-result">
+      <div class="per-person">¥<span id="perPerson">0</span></div>
+      <div class="label">per person</div>
+    </div>
+  </div>
 </div>
 
 <!-- 抽選タブ -->
@@ -288,6 +311,11 @@ body {
   </div>
   <button class="btn-primary" onclick="doDraw(false)">🔀 Redraw</button>
   <button class="serve-btn" id="serveBtn" onclick="toggleServe()">🎾 Auto decide serve</button>
+  <button class="serve-btn" onclick="showCostResult()" id="costBtn" disabled style="opacity:0.4;cursor:not-allowed">💴 Show Cost per Person</button>
+  <div id="costResultDraw" style="display:none;background:var(--green-light);border:1px solid var(--green);border-radius:var(--radius-sm);padding:12px;margin-top:8px;text-align:center">
+    <div style="font-size:24px;font-weight:700;color:var(--green-dark)">¥<span id="perPersonDraw">0</span></div>
+    <div style="font-size:12px;color:var(--green-dark);margin-top:2px">per person</div>
+  </div>
 </div>
 
 <!-- 履歴タブ -->
@@ -308,6 +336,19 @@ var serveEnabled = false;
 var noNameMode = false;
 var activeRecognition = null;
 var STORAGE_KEY = 'tennis_doubles_en_v2';
+
+function calcCost() {
+  var cost = parseInt(document.getElementById('costInput').value);
+  var result = document.getElementById('costResult');
+  var perPerson = document.getElementById('perPerson');
+  if (cost && playerCount >= 4) {
+    var pp = Math.ceil(cost / playerCount);
+    perPerson.textContent = pp.toLocaleString();
+    result.style.display = 'block';
+  } else {
+    result.style.display = 'none';
+  }
+}
 
 function updateCntBtn() {
   var val = parseInt(document.getElementById('cntInput').value);
@@ -342,6 +383,7 @@ function confirmCount() {
   }
   err.style.display = 'none';
   playerCount = val;
+  calcCost();
   if (noNameMode) {
     switchTab('draw');
     doDraw(false);
@@ -578,6 +620,12 @@ function startVoice(idx) {
 
 function resetAll() {
   document.getElementById('cntInput').value = '';
+  document.getElementById('costInput').value = '';
+  var cr = document.getElementById('costResult');
+  if (cr) cr.style.display = 'none';
+  var crd = document.getElementById('costResultDraw');
+  if (crd) crd.style.display = 'none';
+  updateCostBtn();
   document.getElementById('cntError').style.display = 'none';
   updateCntBtn();
   document.getElementById('step2Card').style.display = 'none';
