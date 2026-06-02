@@ -810,7 +810,8 @@ function generateNextPreview(players) {
     html += "<div style=\"font-size:12px;color:var(--text3);margin-top:2px\">⏸ Waiting: " + nextLeftover.join("・") + "</div>";
   }
   nextBody.innerHTML = html;
-  nextArea.style.display = "block";
+  var pna = document.getElementById('prevNextArea');
+  if (pna) pna.style.display = 'block';
 }
 </script>
 </body>
