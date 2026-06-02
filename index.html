@@ -743,16 +743,18 @@ if ('serviceWorker' in navigator) {
 </script>
 <script>
 function showCostResult() {
-  var cost = parseInt(document.getElementById('costInput').value);
+  var costEl = document.getElementById('costInput');
   var resultDiv = document.getElementById('costResultDraw');
   var perPersonEl = document.getElementById('perPersonDraw');
+  if (!costEl) return;
+  var cost = parseInt(costEl.value);
   if (!cost || playerCount < 4) {
-    alert( + no_cost + );
+    alert('費用が入力されていません');
     return;
   }
   var pp = Math.ceil(cost / playerCount);
   perPersonEl.textContent = pp.toLocaleString();
-  resultDiv.style.display = resultDiv.style.display === 'none' ? 'block' : 'none';
+  resultDiv.style.display = 'block';
 }
 </script>
 </body>
