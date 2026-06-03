@@ -239,7 +239,7 @@ function loadI18n(lang, callback) {
 }
 
 function t(key) {
-  return i18n[key] || key;
+  return (key in i18n) ? i18n[key] : key;
 }
 
 function applyI18n() {
