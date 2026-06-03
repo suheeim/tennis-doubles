@@ -84,7 +84,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
       <p id="t-app-desc">Auto court assignment</p>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-      <select onchange="setLang(this.value)" id="langSelect" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:6px;padding:4px 6px;font-size:20px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;outline:none;-webkit-appearance:none;appearance:none;text-align:center">
+      <select onchange="setLang(this.value)" id="langSelect" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:6px;padding:4px 2px;font-size:20px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;outline:none;-webkit-appearance:none;appearance:none;text-align:center;width:40px">
         <option value="ja" style="color:#000;font-size:16px">🇯🇵</option>
         <option value="en" style="color:#000;font-size:16px">🇺🇸</option>
         <option value="kr" style="color:#000;font-size:16px">🇰🇷</option>
@@ -595,12 +595,12 @@ function toggleServe() {
   }
 }
 
-function generateNextPreview(players) {
+function generateNextPreview(players, forceRedraw) {
   var nextBody = document.getElementById('nextResultBody');
   if (!nextBody || players.length < 4) return;
   // 既に次回の組み合わせが保存されていればそれを使う（再生成しない）
   var nextCourts, nextLeftover, reusingNext;
-  if (lastDraw && lastDraw.nextCourts) {
+  if (!forceRedraw && lastDraw && lastDraw.nextCourts) {
     nextCourts = lastDraw.nextCourts;
     nextLeftover = lastDraw.nextLeftover || [];
     reusingNext = true;
