@@ -478,6 +478,11 @@ function doDraw(keepOrder) {
   var courts, leftover;
   if (keepOrder && lastDraw) {
     courts = lastDraw.courts; leftover = lastDraw.leftover;
+  } else if (!keepOrder && lastDraw && lastDraw.nextCourts) {
+    // 次回プレビューの組み合わせをそのまま使用
+    courts = lastDraw.nextCourts; leftover = lastDraw.nextLeftover || [];
+    drawCount++;
+    savePairs(courts, drawCount);
   } else {
     var shuffled = shuffleWithPairAvoidance(players);
     courts = [];
@@ -551,6 +556,8 @@ function generateNextPreview(players) {
       + '</div>';
   });
   nextBody.innerHTML = html;
+  // 次回の組み合わせをlastDrawに保存
+  if (lastDraw) { lastDraw.nextCourts = nextCourts; lastDraw.nextLeftover = nextLeftover; }
   // 以前の結果がある場合のみprevNextAreaを表示
   var prevBody2 = document.getElementById('prevResultBody');
   if (prevBody2 && prevBody2.innerHTML.trim()) {
