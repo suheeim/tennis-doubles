@@ -448,14 +448,14 @@ function shuffleWithPairAvoidance(players) {
   return best;
 }
 
-function savePairs(courts, round) {
+function savePairs(courts, round, serveIdxes) {
   courts.forEach(function(c) {
     var k1 = getPairKey(c[0], c[1]);
     var k2 = getPairKey(c[2], c[3]);
     pairHistory[k1] = (pairHistory[k1] || 0) + 1;
     pairHistory[k2] = (pairHistory[k2] || 0) + 1;
   });
-  gameHistory.push({ round: round, courts: JSON.parse(JSON.stringify(courts)) });
+  gameHistory.push({ round: round, courts: JSON.parse(JSON.stringify(courts)), serveIdxes: serveIdxes || [] });
 }
 
 function doDraw(keepOrder) {
@@ -479,20 +479,17 @@ function doDraw(keepOrder) {
   if (keepOrder && lastDraw) {
     courts = lastDraw.courts; leftover = lastDraw.leftover;
   } else if (!keepOrder && lastDraw && lastDraw.nextCourts) {
-    // 次回プレビューの組み合わせをそのまま使用
     courts = lastDraw.nextCourts; leftover = lastDraw.nextLeftover || [];
     drawCount++;
-    savePairs(courts, drawCount);
   } else {
     var shuffled = shuffleWithPairAvoidance(players);
     courts = [];
     for (var i = 0; i + 3 < shuffled.length; i += 4) courts.push(shuffled.slice(i, i+4));
     leftover = shuffled.slice(courts.length * 4);
     drawCount++;
-    savePairs(courts, drawCount);
   }
 
-  // 次回プレビューからserveIdxesを引き継ぐ（あれば）
+  // serveIdxesを決定（次回プレビューから引き継ぐ）
   var serveIdxes;
   if (!keepOrder && lastDraw && lastDraw.nextServeIdxes) {
     serveIdxes = lastDraw.nextServeIdxes;
@@ -501,6 +498,9 @@ function doDraw(keepOrder) {
   } else {
     serveIdxes = courts.map(function() { return serveEnabled ? Math.floor(Math.random() * 4) : -1; });
   }
+
+  // serveIdxes確定後にsavePairs
+  if (!keepOrder) savePairs(courts, drawCount, serveIdxes);
   var colors = ['#1D9E75','#0F6E56','#158A64','#0D7A58','#1A8A68','#0B6048'];
   var html = '';
   courts.forEach(function(c, i) {
@@ -594,10 +594,14 @@ function renderHistory() {
   }
   var html = '';
   gameHistory.slice().reverse().forEach(function(g) {
-    g.courts.forEach(function(c) {
+    g.courts.forEach(function(c, ci) {
+      var si = g.serveIdxes ? g.serveIdxes[ci] : -1;
+      function hname(name, idx) {
+        return (serveEnabled && si >= 0 && idx === si) ? '<strong style="color:var(--green)">🎾 ' + name + '</strong>' : name;
+      }
       html += '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)">'
         + '<span style="font-size:11px;font-weight:700;color:var(--green);white-space:nowrap;min-width:50px">' + t('round_label') + g.round + t('round_suffix') + '</span>'
-        + '<span style="font-size:14px;color:var(--text)">' + c[0] + '・' + c[1] + ' <span style="color:var(--text3);font-weight:700">vs</span> ' + c[2] + '・' + c[3] + '</span>'
+        + '<span style="font-size:14px;color:var(--text)">' + hname(c[0],0) + '・' + hname(c[1],1) + ' <span style="color:var(--text3);font-weight:700">vs</span> ' + hname(c[2],2) + '・' + hname(c[3],3) + '</span>'
         + '</div>';
     });
   });
