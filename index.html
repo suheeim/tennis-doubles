@@ -84,11 +84,14 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
       <p id="t-app-desc">Auto court assignment</p>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-      <select onchange="setLang(this.value)" id="langSelect" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:6px;padding:4px 2px;font-size:20px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;outline:none;-webkit-appearance:none;appearance:none;text-align:center;width:40px">
-        <option value="ja" style="color:#000;font-size:16px">🇯🇵</option>
-        <option value="en" style="color:#000;font-size:16px">🇺🇸</option>
-        <option value="kr" style="color:#000;font-size:16px">🇰🇷</option>
-      </select>
+      <div style="position:relative">
+        <button id="langBtn" onclick="toggleLangMenu()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:6px;padding:4px 6px;font-size:20px;cursor:pointer;line-height:1;width:40px;text-align:center">🇯🇵</button>
+        <div id="langMenu" style="display:none;position:absolute;right:0;top:44px;background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.18);overflow:hidden;z-index:200;min-width:56px">
+          <div onclick="selectLang('ja')" id="langOpt-ja" style="padding:10px 14px;font-size:20px;cursor:pointer;text-align:center;border-bottom:1px solid #f0f0f0">🇯🇵</div>
+          <div onclick="selectLang('en')" id="langOpt-en" style="padding:10px 14px;font-size:20px;cursor:pointer;text-align:center;border-bottom:1px solid #f0f0f0">🇺🇸</div>
+          <div onclick="selectLang('kr')" id="langOpt-kr" style="padding:10px 14px;font-size:20px;cursor:pointer;text-align:center">🇰🇷</div>
+        </div>
+      </div>
       <button id="resetBtn" onclick="resetAll()" style="display:none;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif" id-t="reset_btn">🏠 Reset</button>
     </div>
   </div>
@@ -187,6 +190,26 @@ var currentLang = 'en';
 var i18n = {};
 
 // ===== i18n =====
+function toggleLangMenu() {
+  var menu = document.getElementById('langMenu');
+  if (menu) menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
+
+function selectLang(lang) {
+  var menu = document.getElementById('langMenu');
+  if (menu) menu.style.display = 'none';
+  setLang(lang);
+}
+
+// メニュー外タップで閉じる
+document.addEventListener('click', function(e) {
+  var btn = document.getElementById('langBtn');
+  var menu = document.getElementById('langMenu');
+  if (menu && btn && !btn.contains(e.target) && !menu.contains(e.target)) {
+    menu.style.display = 'none';
+  }
+});
+
 function setLang(lang) {
   currentLang = lang;
   localStorage.setItem('tennis_draw_lang', lang);
