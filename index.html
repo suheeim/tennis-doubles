@@ -542,8 +542,12 @@ function generateNextPreview(players) {
   var html = '';
   nextCourts.forEach(function(c, i) {
     var col = colors[i % colors.length];
+    var nextServeIdx = serveEnabled ? Math.floor(Math.random() * 4) : -1;
+    function npname(name, idx) {
+      return serveEnabled && idx === nextServeIdx ? '<strong style="color:' + col + '">🎾 ' + name + '</strong>' : name;
+    }
     html += '<div style="border-left:3px solid ' + col + ';padding:6px 10px;margin-bottom:6px;font-size:13px;color:var(--text2)">'
-      + c[0] + ' ・ ' + c[1] + ' <span style="color:var(--text3);font-weight:700">vs</span> ' + c[2] + ' ・ ' + c[3]
+      + npname(c[0],0) + ' ・ ' + npname(c[1],1) + ' <span style="color:var(--text3);font-weight:700">vs</span> ' + npname(c[2],2) + ' ・ ' + npname(c[3],3)
       + '</div>';
   });
   nextBody.innerHTML = html;
