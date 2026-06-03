@@ -83,7 +83,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
       <h1 id="t-app-name">🎾 Doubles Draw</h1>
       <p id="t-app-desc" style="display:none"></p>
     </div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+    <div style="display:flex;flex-direction:row;align-items:center;gap:6px">
       <button id="resetBtn" onclick="resetAll()" style="display:none;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif" id-t="reset_btn">🏠 Reset</button>
       <div style="position:relative">
         <button id="langBtn" onclick="toggleLangMenu()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:6px;padding:4px 6px;font-size:20px;cursor:pointer;line-height:1;width:40px;text-align:center">🇯🇵</button>
@@ -499,15 +499,16 @@ function shuffleWithPairAvoidance(players) {
 }
 
 function getServeIdx(court) {
-  // サーブ回数が最も少ない人を選ぶ
+  // サーブ回数が最も少ない人を選ぶ（同回数の場合はランダム）
   if (!serveEnabled) return -1;
   var minCount = Infinity;
-  var minIdx = 0;
+  var candidates = [];
   for (var si = 0; si < court.length; si++) {
     var cnt = serveHistory[court[si]] || 0;
-    if (cnt < minCount) { minCount = cnt; minIdx = si; }
+    if (cnt < minCount) { minCount = cnt; candidates = [si]; }
+    else if (cnt === minCount) { candidates.push(si); }
   }
-  return minIdx;
+  return candidates[Math.floor(Math.random() * candidates.length)];
 }
 
 function recordServe(court, serveIdx) {
@@ -695,7 +696,7 @@ function renderHistory() {
     return;
   }
   var html = '';
-  gameHistory.slice().reverse().forEach(function(g) {
+  gameHistory.slice().forEach(function(g) {
     g.courts.forEach(function(c, ci) {
       var si = g.serveIdxes ? g.serveIdxes[ci] : -1;
       function hname(name, idx) {
