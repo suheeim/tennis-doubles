@@ -562,16 +562,27 @@ function toggleServe() {
 function generateNextPreview(players) {
   var nextBody = document.getElementById('nextResultBody');
   if (!nextBody || players.length < 4) return;
-  var nextShuffled = shuffleWithPairAvoidance(players);
-  var nextCourts = [];
-  for (var i = 0; i + 3 < nextShuffled.length; i += 4) nextCourts.push(nextShuffled.slice(i, i+4));
+  // 既に次回の組み合わせが保存されていればそれを使う（再生成しない）
+  var nextCourts, nextLeftover, reusingNext;
+  if (lastDraw && lastDraw.nextCourts) {
+    nextCourts = lastDraw.nextCourts;
+    nextLeftover = lastDraw.nextLeftover || [];
+    reusingNext = true;
+  } else {
+    var nextShuffled = shuffleWithPairAvoidance(players);
+    nextCourts = [];
+    for (var i = 0; i + 3 < nextShuffled.length; i += 4) nextCourts.push(nextShuffled.slice(i, i+4));
+    nextLeftover = nextShuffled.slice(nextCourts.length * 4);
+    reusingNext = false;
+  }
   var colors = ['#1D9E75','#0F6E56','#158A64','#0D7A58'];
   var html = '';
-  var nextServeIdxes = [];
+  var nextServeIdxes = (reusingNext && lastDraw && lastDraw.nextServeIdxes) ? lastDraw.nextServeIdxes : [];
+  var generatingServe = !(reusingNext && lastDraw && lastDraw.nextServeIdxes);
   nextCourts.forEach(function(c, i) {
     var col = colors[i % colors.length];
-    var nextServeIdx = serveEnabled ? Math.floor(Math.random() * 4) : -1;
-    nextServeIdxes.push(nextServeIdx);
+    var nextServeIdx = generatingServe ? (serveEnabled ? Math.floor(Math.random() * 4) : -1) : nextServeIdxes[i];
+    if (generatingServe) nextServeIdxes.push(nextServeIdx);
     function npname(name, idx) {
       return serveEnabled && idx === nextServeIdx ? '<strong style="color:' + col + '">🎾 ' + name + '</strong>' : name;
     }
