@@ -84,14 +84,11 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
       <p id="t-app-desc">Auto court assignment</p>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
-        <select onchange="setLang(this.value)" id="langSelect" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:6px;padding:4px 8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;outline:none">
-          <option value="ja" style="color:#000">日本語</option>
-          <option value="en" style="color:#000">English</option>
-          <option value="kr" style="color:#000">한국어</option>
-        </select>
-        <span id="langIcon" style="font-size:20px">🇺🇸</span>
-      </div>
+      <select onchange="setLang(this.value)" id="langSelect" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:6px;padding:4px 6px;font-size:20px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;outline:none;-webkit-appearance:none;appearance:none;text-align:center">
+        <option value="ja" style="color:#000;font-size:16px">🇯🇵</option>
+        <option value="en" style="color:#000;font-size:16px">🇺🇸</option>
+        <option value="kr" style="color:#000;font-size:16px">🇰🇷</option>
+      </select>
       <button id="resetBtn" onclick="resetAll()" style="display:none;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif" id-t="reset_btn">🏠 Reset</button>
     </div>
   </div>
