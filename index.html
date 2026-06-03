@@ -399,7 +399,16 @@ function switchTab(name) {
   var resetBtn = document.getElementById('resetBtn');
   if (resetBtn) resetBtn.style.display = name !== 'players' ? 'block' : 'none';
   if (name === 'draw') updateCostBtn();
-  if (name === 'history') renderHistory();
+  if (name === 'history') {
+    // lastDrawのserveIdxesをgameHistoryの該当レコードに同期
+    if (lastDraw && gameHistory.length > 0) {
+      var last = gameHistory[gameHistory.length - 1];
+      if (last.round === lastDraw.round) {
+        last.serveIdxes = lastDraw.serveIdxes;
+      }
+    }
+    renderHistory();
+  }
 }
 
 function getPlayers() {
