@@ -448,6 +448,24 @@ function shuffleWithPairAvoidance(players) {
   return best;
 }
 
+function getServeIdx(court) {
+  // サーブ回数が最も少ない人を選ぶ
+  if (!serveEnabled) return -1;
+  var minCount = Infinity;
+  var minIdx = 0;
+  for (var si = 0; si < court.length; si++) {
+    var cnt = serveHistory[court[si]] || 0;
+    if (cnt < minCount) { minCount = cnt; minIdx = si; }
+  }
+  return minIdx;
+}
+
+function recordServe(court, serveIdx) {
+  if (serveIdx >= 0 && court[serveIdx]) {
+    serveHistory[court[serveIdx]] = (serveHistory[court[serveIdx]] || 0) + 1;
+  }
+}
+
 function savePairs(courts, round, serveIdxes) {
   courts.forEach(function(c) {
     var k1 = getPairKey(c[0], c[1]);
@@ -488,7 +506,8 @@ function doDraw(keepOrder) {
 
     courts = lastDraw.nextCourts;
     leftover = lastDraw.nextLeftover || [];
-    serveIdxes = lastDraw.nextServeIdxes || courts.map(function() { return serveEnabled ? Math.floor(Math.random() * 4) : -1; });
+    serveIdxes = lastDraw.nextServeIdxes || courts.map(function(c) { return getServeIdx(c); });
+    courts.forEach(function(c, i) { recordServe(c, serveIdxes[i]); });
     drawCount++;
     currentRound = drawCount;
     savePairs(courts, currentRound, serveIdxes);
@@ -503,7 +522,8 @@ function doDraw(keepOrder) {
     courts = [];
     for (var i = 0; i + 3 < shuffled.length; i += 4) courts.push(shuffled.slice(i, i+4));
     leftover = shuffled.slice(courts.length * 4);
-    serveIdxes = courts.map(function() { return serveEnabled ? Math.floor(Math.random() * 4) : -1; });
+    serveIdxes = courts.map(function(c) { return getServeIdx(c); });
+    courts.forEach(function(c, i) { recordServe(c, serveIdxes[i]); });
     drawCount++;
     currentRound = drawCount;
     savePairs(courts, currentRound, serveIdxes);
@@ -552,8 +572,8 @@ function toggleServe() {
   document.getElementById('serveBtn').classList.toggle('active', serveEnabled);
   if (lastDraw) {
     // サーブを新しく計算して現在の試合を再描画
-    lastDraw.serveIdxes = lastDraw.courts.map(function() {
-      return serveEnabled ? Math.floor(Math.random() * 4) : -1;
+    lastDraw.serveIdxes = lastDraw.courts.map(function(c) {
+      return getServeIdx(c);
     });
     doDraw(true);
   }
@@ -581,7 +601,7 @@ function generateNextPreview(players) {
   var generatingServe = !(reusingNext && lastDraw && lastDraw.nextServeIdxes);
   nextCourts.forEach(function(c, i) {
     var col = colors[i % colors.length];
-    var nextServeIdx = generatingServe ? (serveEnabled ? Math.floor(Math.random() * 4) : -1) : nextServeIdxes[i];
+    var nextServeIdx = generatingServe ? getServeIdx(c) : nextServeIdxes[i];
     if (generatingServe) nextServeIdxes.push(nextServeIdx);
     function npname(name, idx) {
       return serveEnabled && idx === nextServeIdx ? '<strong style="color:' + col + '">🎾 ' + name + '</strong>' : name;
@@ -622,7 +642,7 @@ function renderHistory() {
     g.courts.forEach(function(c, ci) {
       var si = g.serveIdxes ? g.serveIdxes[ci] : -1;
       function hname(name, idx) {
-        return (serveEnabled && si >= 0 && idx === si) ? '<strong style="color:var(--green)">🎾 ' + name + '</strong>' : name;
+        return (si >= 0 && idx === si) ? '<strong style="color:var(--green)">🎾 ' + name + '</strong>' : name;
       }
       html += '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)">'
         + '<span style="font-size:11px;font-weight:700;color:var(--green);white-space:nowrap;min-width:50px">' + t('round_label') + g.round + t('round_suffix') + '</span>'
