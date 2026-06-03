@@ -164,7 +164,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
   <button class="serve-btn" id="serveBtn" onclick="toggleServe()"><span id="t-serve-btn">🎾 Auto decide serve</span></button>
   <button class="serve-btn" onclick="showCostResult()" id="costBtn" disabled style="opacity:0.4;cursor:not-allowed"><span id="t-cost-btn">💴 Show Cost per Person</span></button>
   <div id="costResultDraw" style="display:none;background:var(--green-light);border:1px solid var(--green);border-radius:var(--radius-sm);padding:14px;margin-top:8px;text-align:center">
-    <div style="font-size:28px;font-weight:700;color:var(--green-dark)">¥<span id="perPersonDraw">0</span></div>
+    <div style="font-size:28px;font-weight:700;color:var(--green-dark)"><span id="costCurrency">¥</span><span id="perPersonDraw">0</span></div>
     <div style="font-size:12px;color:var(--green-dark);margin-top:2px" id="t-cost-per-person">per person</div>
     <div id="costTotalDraw" style="font-size:12px;color:var(--green-dark);opacity:0.7;margin-top:6px"></div>
   </div>
@@ -299,9 +299,12 @@ function applyI18n() {
   // 名前リストのplaceholderを更新
   for (var i = 0; i < playerCount; i++) {
     var inp = document.getElementById('p' + i);
-    if (inp) inp.placeholder = t('player_placeholder') + String(i + 1);
+    if (inp) inp.placeholder = currentLang === 'kr' ? t('player_placeholder') : t('player_placeholder') + String(i + 1);
   }
 
+  // 通貨記号更新
+  var currencyEl2 = document.getElementById('costCurrency');
+  if (currencyEl2) currencyEl2.textContent = currentLang === 'kr' ? '' : '¥';
   // サーブボタン状態を維持
   var serveBtn = document.getElementById('serveBtn');
   if (serveBtn) {
@@ -684,8 +687,17 @@ function showCostResult() {
   if (!cost || playerCount < 4) { alert(t('cost_alert')); return; }
   var pp = Math.ceil(cost / playerCount);
   document.getElementById('perPersonDraw').textContent = pp.toLocaleString();
+  var currency = currentLang === 'kr' ? '원' : '¥';
+  var currencyEl = document.getElementById('costCurrency');
+  if (currencyEl) currencyEl.textContent = currentLang === 'kr' ? '' : '¥';
   var totalEl = document.getElementById('costTotalDraw');
-  if (totalEl) totalEl.textContent = pp.toLocaleString() + ' × ' + playerCount + ' = ' + (pp * playerCount).toLocaleString();
+  if (totalEl) {
+    if (currentLang === 'kr') {
+      totalEl.textContent = pp.toLocaleString() + '원 × ' + playerCount + ' = ' + (pp * playerCount).toLocaleString() + '원';
+    } else {
+      totalEl.textContent = '¥' + pp.toLocaleString() + ' × ' + playerCount + ' = ¥' + (pp * playerCount).toLocaleString();
+    }
+  }
   document.getElementById('costResultDraw').style.display = 'block';
 }
 
