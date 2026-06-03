@@ -492,7 +492,15 @@ function doDraw(keepOrder) {
     savePairs(courts, drawCount);
   }
 
-  var serveIdxes = courts.map(function() { return serveEnabled ? Math.floor(Math.random() * 4) : -1; });
+  // 次回プレビューからserveIdxesを引き継ぐ（あれば）
+  var serveIdxes;
+  if (!keepOrder && lastDraw && lastDraw.nextServeIdxes) {
+    serveIdxes = lastDraw.nextServeIdxes;
+  } else if (keepOrder && lastDraw && lastDraw.serveIdxes) {
+    serveIdxes = lastDraw.serveIdxes;
+  } else {
+    serveIdxes = courts.map(function() { return serveEnabled ? Math.floor(Math.random() * 4) : -1; });
+  }
   var colors = ['#1D9E75','#0F6E56','#158A64','#0D7A58','#1A8A68','#0B6048'];
   var html = '';
   courts.forEach(function(c, i) {
@@ -524,7 +532,7 @@ function doDraw(keepOrder) {
       + '</div>';
   });
 
-  lastDraw = { courts: courts, leftover: leftover, time: new Date(), simpleHtml: simpleHtml };
+  lastDraw = { courts: courts, leftover: leftover, time: new Date(), simpleHtml: simpleHtml, serveIdxes: serveIdxes };
   el.innerHTML = html;
   generateNextPreview(players);
 }
@@ -545,9 +553,11 @@ function generateNextPreview(players) {
   for (var i = 0; i + 3 < nextShuffled.length; i += 4) nextCourts.push(nextShuffled.slice(i, i+4));
   var colors = ['#1D9E75','#0F6E56','#158A64','#0D7A58'];
   var html = '';
+  var nextServeIdxes = [];
   nextCourts.forEach(function(c, i) {
     var col = colors[i % colors.length];
     var nextServeIdx = serveEnabled ? Math.floor(Math.random() * 4) : -1;
+    nextServeIdxes.push(nextServeIdx);
     function npname(name, idx) {
       return serveEnabled && idx === nextServeIdx ? '<strong style="color:' + col + '">🎾 ' + name + '</strong>' : name;
     }
@@ -556,8 +566,8 @@ function generateNextPreview(players) {
       + '</div>';
   });
   nextBody.innerHTML = html;
-  // 次回の組み合わせをlastDrawに保存
-  if (lastDraw) { lastDraw.nextCourts = nextCourts; lastDraw.nextLeftover = nextLeftover; }
+  // 次回の組み合わせとサーブをlastDrawに保存
+  if (lastDraw) { lastDraw.nextCourts = nextCourts; lastDraw.nextLeftover = nextLeftover; lastDraw.nextServeIdxes = nextServeIdxes; }
   // 以前の結果がある場合のみprevNextAreaを表示
   var prevBody2 = document.getElementById('prevResultBody');
   if (prevBody2 && prevBody2.innerHTML.trim()) {
