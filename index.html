@@ -84,7 +84,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
       <p id="t-app-desc" style="display:none"></p>
     </div>
     <div style="display:flex;flex-direction:row;align-items:center;gap:6px">
-      <button id="resetBtn" onclick="resetAll()" style="display:none;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif" id-t="reset_btn">🏠 Reset</button>
+      <button id="resetBtn" onclick="resetAll()" style="display:block;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif" id-t="reset_btn">🏠 Reset</button>
       <div style="position:relative">
         <button id="langBtn" onclick="toggleLangMenu()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:6px;padding:4px 6px;font-size:20px;cursor:pointer;line-height:1;width:40px;text-align:center">🇯🇵</button>
         <div id="langMenu" style="display:none;position:absolute;right:0;top:44px;background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.18);z-index:9999;min-width:56px">
@@ -299,7 +299,7 @@ function applyI18n() {
   // 名前リストのplaceholderを更新
   for (var i = 0; i < playerCount; i++) {
     var inp = document.getElementById('p' + i);
-    if (inp) inp.placeholder = currentLang === 'kr' ? t('player_placeholder') : t('player_placeholder') + String(i + 1);
+    if (inp) inp.placeholder = t('player_placeholder');
   }
 
   // 通貨記号更新
@@ -409,7 +409,7 @@ function renderNameList() {
     inp.className = 'name-input';
     inp.id = 'p' + i;
     inp.type = 'text';
-    inp.placeholder = t('player_placeholder') + String(i + 1);
+    inp.placeholder = t('player_placeholder');
     inp.maxLength = 12;
     inp.value = saved;
     (function(idx) {
@@ -441,7 +441,7 @@ function switchTab(name) {
     }
   });
   var resetBtn = document.getElementById('resetBtn');
-  if (resetBtn) resetBtn.style.display = name !== 'players' ? 'block' : 'none';
+  if (resetBtn) resetBtn.style.display = 'block';
   if (name === 'draw') updateCostBtn();
   if (name === 'history') {
     // lastDrawのserveIdxesをgameHistoryの該当レコードに同期
@@ -821,7 +821,7 @@ function resetAll() {
   if (td) { td.disabled = true; td.style.cursor = 'not-allowed'; td.style.opacity = '0.35'; td.classList.remove('active'); }
   if (th) { th.disabled = true; th.style.cursor = 'not-allowed'; th.style.opacity = '0.35'; th.classList.remove('active'); }
   switchTab('players');
-  document.getElementById('resetBtn').style.display = 'none';
+  document.getElementById('resetBtn').style.display = 'block';
   setTimeout(function() { var ci = document.getElementById('cntInput'); if (ci) ci.focus(); }, 100);
 }
 
