@@ -219,7 +219,16 @@ function setLang(lang) {
     var btn = document.querySelector('.lang-btn[onclick="setLang(\'' + l + '\')"]');
     if (btn) btn.classList.toggle('active', l === lang);
   });
-  loadI18n(lang, applyI18n);
+  loadI18n(lang, function() {
+    applyI18n();
+    if (lastDraw) {
+      var players2 = noNameMode
+        ? (function() { var arr = []; for (var i2 = 0; i2 < playerCount; i2++) arr.push(String(i2+1)); return arr; })()
+        : getPlayers();
+      doDraw(true);
+      generateNextPreview(players2, true);
+    }
+  });
 }
 
 function loadI18n(lang, callback) {
