@@ -20,7 +20,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body { overflow-x: hidden; }
 body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; max-width: 480px; margin: 0 auto; padding-bottom: 20px; }
-.header { background: var(--green); color: #fff; padding: 48px 20px 18px; position: sticky; top: 0; z-index: 10; overflow: hidden; }
+.header { background: var(--green); color: #fff; padding: 48px 20px 18px; position: sticky; top: 0; z-index: 100; overflow: visible; }
 .header h1 { font-size: 20px; font-weight: 700; letter-spacing: 0.02em; }
 .header p { font-size: 13px; opacity: 0.8; margin-top: 2px; }
 .section { display: none; padding: 16px; }
@@ -86,7 +86,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
       <div style="position:relative">
         <button id="langBtn" onclick="toggleLangMenu()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:6px;padding:4px 6px;font-size:20px;cursor:pointer;line-height:1;width:40px;text-align:center">🇯🇵</button>
-        <div id="langMenu" style="display:none;position:absolute;right:0;top:44px;background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.18);overflow:hidden;z-index:200;min-width:56px">
+        <div id="langMenu" style="display:none;position:absolute;right:0;top:44px;background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.18);z-index:9999;min-width:56px">
           <div onclick="selectLang('ja')" id="langOpt-ja" style="padding:10px 14px;font-size:20px;cursor:pointer;text-align:center;border-bottom:1px solid #f0f0f0">🇯🇵</div>
           <div onclick="selectLang('en')" id="langOpt-en" style="padding:10px 14px;font-size:20px;cursor:pointer;text-align:center;border-bottom:1px solid #f0f0f0">🇺🇸</div>
           <div onclick="selectLang('kr')" id="langOpt-kr" style="padding:10px 14px;font-size:20px;cursor:pointer;text-align:center">🇰🇷</div>
