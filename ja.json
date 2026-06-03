@@ -37,5 +37,7 @@
   "voice_not_supported": "音声入力がサポートされていません。\nSafari(iOS)またはChrome(Android)をお使いください。",
   "save_ok": "✅ 履歴に保存しました",
   "save_first": "先に抽選してください",
-  "clear_confirm": "全履歴を削除しますか？"
+  "clear_confirm": "全履歴を削除しますか？",
+  "court_label": "第",
+  "court_suffix": "試合"
 }

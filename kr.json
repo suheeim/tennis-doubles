@@ -37,5 +37,7 @@
   "voice_not_supported": "음성 입력이 지원되지 않습니다.\nSafari(iOS) 또는 Chrome(Android)을 사용해 주세요.",
   "save_ok": "✅ 이력에 저장되었습니다",
   "save_first": "먼저 추첨해 주세요",
-  "clear_confirm": "전체 이력을 삭제하시겠습니까?"
+  "clear_confirm": "전체 이력을 삭제하시겠습니까?",
+  "court_label": "제",
+  "court_suffix": "경기"
 }

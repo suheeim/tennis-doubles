@@ -37,5 +37,7 @@
   "voice_not_supported": "Voice input not supported.\nTry Safari (iOS) or Chrome (Android).",
   "save_ok": "✅ Saved to history",
   "save_first": "Please draw first",
-  "clear_confirm": "Delete all history?"
+  "clear_confirm": "Delete all history?",
+  "court_label": "Game ",
+  "court_suffix": ""
 }

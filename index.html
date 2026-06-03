@@ -140,16 +140,22 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
 <!-- 抽選タブ -->
 <div id="sec-draw" class="section">
   <div class="sec-label"><span id="t-draw-result-label">Draw Results</span></div>
+  <!-- 現在の結果（フル幅） -->
   <div id="drawResult">
     <div class="empty"><div class="empty-icon">🎾</div><span id="t-draw-empty">Set players and press "Start Draw"</span></div>
   </div>
-  <div id="nextResult" style="display:none;margin-top:16px">
-    <div style="font-size:12px;font-weight:700;color:var(--text3);letter-spacing:.08em;margin-bottom:8px"><span id="t-next-round-label">🔮 Next Round Preview</span></div>
-    <div id="nextResultBody"></div>
-  </div>
-  <div id="prevResult" style="display:none;margin-top:16px">
-    <div style="font-size:12px;font-weight:700;color:var(--text3);letter-spacing:.08em;margin-bottom:8px"><span id="t-prev-result-label">📋 Previous Result</span></div>
-    <div id="prevResultBody"></div>
+  <!-- 以前・予定（2カラム） -->
+  <div id="prevNextArea" style="display:none;margin-top:12px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start">
+      <div id="prevResult">
+        <div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.08em;margin-bottom:6px"><span id="t-prev-result-label">📋 Previous</span></div>
+        <div id="prevResultBody"></div>
+      </div>
+      <div id="nextResult">
+        <div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.08em;margin-bottom:6px"><span id="t-next-round-label">🔮 Next</span></div>
+        <div id="nextResultBody"></div>
+      </div>
+    </div>
   </div>
   <button class="btn-primary" onclick="doDraw(false)"><span>🔀</span><span id="t-redraw-btn">Redraw</span></button>
   <button class="serve-btn" id="serveBtn" onclick="toggleServe()"><span id="t-serve-btn">🎾 Auto decide serve</span></button>
@@ -458,7 +464,8 @@ function doDraw(keepOrder) {
   var prevBody = document.getElementById('prevResultBody');
   if (!keepOrder && lastDraw && lastDraw.simpleHtml) {
     prevBody.innerHTML = lastDraw.simpleHtml;
-    document.getElementById('prevResult').style.display = 'block';
+    var pna2 = document.getElementById('prevNextArea');
+    if (pna2) pna2.style.display = 'block';
   }
   var players = noNameMode
     ? (function() { var arr = []; for (var i = 0; i < playerCount; i++) arr.push(String(i+1)); return arr; })()
@@ -483,18 +490,19 @@ function doDraw(keepOrder) {
 
   var serveIdxes = courts.map(function() { return serveEnabled ? Math.floor(Math.random() * 4) : -1; });
   var colors = ['#1D9E75','#0F6E56','#158A64','#0D7A58','#1A8A68','#0B6048'];
-  var html = '';
+  var roundLabel = t('round_label') + ' ' + drawCount;
+  var html = '<div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px;text-align:center;letter-spacing:.05em">' + roundLabel + '</div>';
   courts.forEach(function(c, i) {
     var col = colors[i % colors.length];
     var si = serveIdxes[i];
     function pname(name, idx) {
       return (serveEnabled && idx === si)
-        ? '<div class="pname server">🎾' + name + '</div>'
+        ? '<div class="pname server">🎾 ' + name + '</div>'
         : '<div class="pname">' + name + '</div>';
     }
-    html += '<div class="court-card">'
-      + '<div class="court-top" style="background:' + col + '">🎾 Court ' + (i+1) + '</div>'
-      + '<div class="court-body"><div class="vs-grid">'
+    html += '<div style="background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden">'
+      + '<div style="background:' + col + ';color:#fff;padding:8px 14px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">🎾 Court ' + (i+1) + '</div>'
+      + '<div style="padding:12px"><div class="vs-grid">'
       + '<div class="team"><div class="team-lbl">TEAM A</div>' + pname(c[0],0) + pname(c[1],1) + '</div>'
       + '<div class="vs-text">VS</div>'
       + '<div class="team"><div class="team-lbl">TEAM B</div>' + pname(c[2],2) + pname(c[3],3) + '</div>'
@@ -543,8 +551,12 @@ function generateNextPreview(players) {
       + '</div>';
   });
   nextBody.innerHTML = html;
-  var pna = document.getElementById('nextResult');
-  if (pna) pna.style.display = 'block';
+  // 以前の結果がある場合のみprevNextAreaを表示
+  var prevBody2 = document.getElementById('prevResultBody');
+  if (prevBody2 && prevBody2.innerHTML.trim()) {
+    var pna = document.getElementById('prevNextArea');
+    if (pna) pna.style.display = 'block';
+  }
 }
 
 function showCostResult() {
@@ -661,8 +673,8 @@ function resetAll() {
   var sbSpan = document.getElementById('t-serve-btn');
   if (sbSpan) sbSpan.textContent = t('serve_btn');
   document.getElementById('drawResult').innerHTML = '<div class="empty"><div class="empty-icon">🎾</div><span id="t-draw-empty">' + t('draw_empty') + '</span></div>';
-  document.getElementById('prevResult').style.display = 'none';
-  document.getElementById('nextResult').style.display = 'none';
+  var pna = document.getElementById('prevNextArea');
+  if (pna) pna.style.display = 'none';
   var prevBody = document.getElementById('prevResultBody');
   if (prevBody) prevBody.innerHTML = '';
   var goBtn = document.getElementById('goDrawBtn');
