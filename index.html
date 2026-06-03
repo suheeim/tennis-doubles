@@ -139,7 +139,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
 
 <!-- 抽選タブ -->
 <div id="sec-draw" class="section">
-  <div class="sec-label"><span id="t-draw-result-label">Draw Results</span></div>
+
   <!-- 現在の結果（フル幅） -->
   <div id="drawResult">
     <div class="empty"><div class="empty-icon">🎾</div><span id="t-draw-empty">Set players and press "Start Draw"</span></div>
@@ -231,7 +231,6 @@ function applyI18n() {
     'go_draw_btn': 't-go-draw-btn',
     'court_fee_title': 't-court-fee-title',
     'court_fee_unit': 't-court-fee-unit',
-    'draw_result_label': 't-draw-result-label',
     'next_round_label': 't-next-round-label',
     'prev_result_label': 't-prev-result-label',
     'redraw_btn': 't-redraw-btn',
@@ -490,8 +489,7 @@ function doDraw(keepOrder) {
 
   var serveIdxes = courts.map(function() { return serveEnabled ? Math.floor(Math.random() * 4) : -1; });
   var colors = ['#1D9E75','#0F6E56','#158A64','#0D7A58','#1A8A68','#0B6048'];
-  var roundLabel = t('round_label') + ' ' + drawCount;
-  var html = '<div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px;text-align:center;letter-spacing:.05em">' + roundLabel + '</div>';
+  var html = '';
   courts.forEach(function(c, i) {
     var col = colors[i % colors.length];
     var si = serveIdxes[i];
@@ -501,7 +499,7 @@ function doDraw(keepOrder) {
         : '<div class="pname">' + name + '</div>';
     }
     html += '<div style="background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden">'
-      + '<div style="background:' + col + ';color:#fff;padding:8px 14px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">🎾 Court ' + (i+1) + '</div>'
+      + '<div style="background:' + col + ';color:#fff;padding:8px 14px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">🎾 ' + t('court_label') + (i+1) + t('court_suffix') + '</div>'
       + '<div style="padding:12px"><div class="vs-grid">'
       + '<div class="team"><div class="team-lbl">TEAM A</div>' + pname(c[0],0) + pname(c[1],1) + '</div>'
       + '<div class="vs-text">VS</div>'
@@ -579,7 +577,7 @@ function renderHistory() {
   gameHistory.slice().reverse().forEach(function(g) {
     g.courts.forEach(function(c) {
       html += '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)">'
-        + '<span style="font-size:11px;font-weight:700;color:var(--green);white-space:nowrap;min-width:50px">' + t('round_label') + g.round + '</span>'
+        + '<span style="font-size:11px;font-weight:700;color:var(--green);white-space:nowrap;min-width:50px">' + t('round_label') + g.round + t('round_suffix') + '</span>'
         + '<span style="font-size:14px;color:var(--text)">' + c[0] + '・' + c[1] + ' <span style="color:var(--text3);font-weight:700">vs</span> ' + c[2] + '・' + c[3] + '</span>'
         + '</div>';
     });
