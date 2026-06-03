@@ -575,6 +575,13 @@ function toggleServe() {
     lastDraw.serveIdxes = lastDraw.courts.map(function(c) {
       return getServeIdx(c);
     });
+    // gameHistoryの最新レコードも更新
+    if (gameHistory.length > 0) {
+      var last = gameHistory[gameHistory.length - 1];
+      if (last.round === lastDraw.round) {
+        last.serveIdxes = lastDraw.serveIdxes;
+      }
+    }
     doDraw(true);
   }
 }
