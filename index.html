@@ -461,11 +461,7 @@ function savePairs(courts, round, serveIdxes) {
 function doDraw(keepOrder) {
   var el = document.getElementById('drawResult');
   var prevBody = document.getElementById('prevResultBody');
-  if (!keepOrder && lastDraw && lastDraw.simpleHtml) {
-    prevBody.innerHTML = lastDraw.simpleHtml;
-    var pna2 = document.getElementById('prevNextArea');
-    if (pna2) pna2.style.display = 'block';
-  }
+
   var players = noNameMode
     ? (function() { var arr = []; for (var i = 0; i < playerCount; i++) arr.push(String(i+1)); return arr; })()
     : getPlayers();
@@ -475,44 +471,56 @@ function doDraw(keepOrder) {
     lastDraw = null; return;
   }
 
-  var courts, leftover;
+  var courts, leftover, serveIdxes, currentRound;
+
   if (keepOrder && lastDraw) {
-    courts = lastDraw.courts; leftover = lastDraw.leftover;
+    // サーブON/OFF切り替え時：組み合わせそのまま、serveIdxesだけ更新済み
+    courts = lastDraw.courts;
+    leftover = lastDraw.leftover;
+    serveIdxes = lastDraw.serveIdxes;
+    currentRound = lastDraw.round || drawCount;
   } else if (!keepOrder && lastDraw && lastDraw.nextCourts) {
-    courts = lastDraw.nextCourts; leftover = lastDraw.nextLeftover || [];
+    // 2回目以降：前回の「次回の試合」をそのまま現在に
+    // まず現在の試合を前回として保存
+    prevBody.innerHTML = lastDraw.simpleHtml || '';
+    var pna2 = document.getElementById('prevNextArea');
+    if (pna2) pna2.style.display = 'block';
+
+    courts = lastDraw.nextCourts;
+    leftover = lastDraw.nextLeftover || [];
+    serveIdxes = lastDraw.nextServeIdxes || courts.map(function() { return serveEnabled ? Math.floor(Math.random() * 4) : -1; });
     drawCount++;
+    currentRound = drawCount;
+    savePairs(courts, currentRound, serveIdxes);
   } else {
+    // 初回抽選
+    if (!keepOrder && lastDraw && lastDraw.simpleHtml) {
+      prevBody.innerHTML = lastDraw.simpleHtml;
+      var pna3 = document.getElementById('prevNextArea');
+      if (pna3) pna3.style.display = 'block';
+    }
     var shuffled = shuffleWithPairAvoidance(players);
     courts = [];
     for (var i = 0; i + 3 < shuffled.length; i += 4) courts.push(shuffled.slice(i, i+4));
     leftover = shuffled.slice(courts.length * 4);
-    drawCount++;
-  }
-
-  // serveIdxesを決定（次回プレビューから引き継ぐ）
-  var serveIdxes;
-  if (!keepOrder && lastDraw && lastDraw.nextServeIdxes) {
-    serveIdxes = lastDraw.nextServeIdxes;
-  } else if (keepOrder && lastDraw && lastDraw.serveIdxes) {
-    serveIdxes = lastDraw.serveIdxes;
-  } else {
     serveIdxes = courts.map(function() { return serveEnabled ? Math.floor(Math.random() * 4) : -1; });
+    drawCount++;
+    currentRound = drawCount;
+    savePairs(courts, currentRound, serveIdxes);
   }
 
-  // serveIdxes確定後にsavePairs
-  if (!keepOrder) savePairs(courts, drawCount, serveIdxes);
   var colors = ['#1D9E75','#0F6E56','#158A64','#0D7A58','#1A8A68','#0B6048'];
   var html = '';
   courts.forEach(function(c, i) {
     var col = colors[i % colors.length];
     var si = serveIdxes[i];
     function pname(name, idx) {
-      return (serveEnabled && idx === si)
+      return (serveEnabled && si >= 0 && idx === si)
         ? '<div class="pname server">🎾 ' + name + '</div>'
         : '<div class="pname">' + name + '</div>';
     }
     html += '<div style="background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden">'
-      + '<div style="background:' + col + ';color:#fff;padding:8px 14px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">🎾 ' + t('court_label') + (i+1) + t('court_suffix') + '</div>'
+      + '<div style="background:' + col + ';color:#fff;padding:8px 14px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">🎾 ' + t('court_label') + currentRound + t('court_suffix') + (courts.length > 1 ? ' - Court ' + (i+1) : '') + '</div>'
       + '<div style="padding:12px"><div class="vs-grid">'
       + '<div class="team"><div class="team-lbl">TEAM A</div>' + pname(c[0],0) + pname(c[1],1) + '</div>'
       + '<div class="vs-text">VS</div>'
@@ -526,13 +534,13 @@ function doDraw(keepOrder) {
   }
 
   var simpleHtml = '';
-  courts.forEach(function(c, i) {
+  courts.forEach(function(c) {
     simpleHtml += '<div style="border-left:3px solid var(--border);padding:6px 10px;margin-bottom:6px;font-size:13px;color:var(--text2)">'
       + c[0] + '・' + c[1] + ' <span style="color:var(--text3);font-weight:700">vs</span> ' + c[2] + '・' + c[3]
       + '</div>';
   });
 
-  lastDraw = { courts: courts, leftover: leftover, time: new Date(), simpleHtml: simpleHtml, serveIdxes: serveIdxes };
+  lastDraw = { courts: courts, leftover: leftover, time: new Date(), simpleHtml: simpleHtml, serveIdxes: serveIdxes, round: currentRound };
   el.innerHTML = html;
   generateNextPreview(players);
 }
@@ -542,7 +550,13 @@ function toggleServe() {
   var sbSpan = document.getElementById('t-serve-btn');
   if (sbSpan) sbSpan.textContent = serveEnabled ? t('serve_btn_on') : t('serve_btn');
   document.getElementById('serveBtn').classList.toggle('active', serveEnabled);
-  if (lastDraw) doDraw(true);
+  if (lastDraw) {
+    // サーブを新しく計算して現在の試合を再描画
+    lastDraw.serveIdxes = lastDraw.courts.map(function() {
+      return serveEnabled ? Math.floor(Math.random() * 4) : -1;
+    });
+    doDraw(true);
+  }
 }
 
 function generateNextPreview(players) {
