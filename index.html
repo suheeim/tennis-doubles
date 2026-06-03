@@ -81,9 +81,10 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
   <div style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
       <h1 id="t-app-name">🎾 Doubles Draw</h1>
-      <p id="t-app-desc">Auto court assignment</p>
+      <p id="t-app-desc" style="display:none"></p>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+      <button id="resetBtn" onclick="resetAll()" style="display:none;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif" id-t="reset_btn">🏠 Reset</button>
       <div style="position:relative">
         <button id="langBtn" onclick="toggleLangMenu()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:6px;padding:4px 6px;font-size:20px;cursor:pointer;line-height:1;width:40px;text-align:center">🇯🇵</button>
         <div id="langMenu" style="display:none;position:absolute;right:0;top:44px;background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.18);z-index:9999;min-width:56px">
@@ -92,7 +93,6 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
           <div onclick="selectLang('kr')" id="langOpt-kr" style="padding:10px 14px;font-size:20px;cursor:pointer;text-align:center">🇰🇷</div>
         </div>
       </div>
-      <button id="resetBtn" onclick="resetAll()" style="display:none;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif" id-t="reset_btn">🏠 Reset</button>
     </div>
   </div>
 </div>
@@ -231,6 +231,11 @@ function setLang(lang) {
         : getPlayers();
       doDraw(true);
       generateNextPreview(players2, true);
+    }
+    // 履歴画面が表示中なら再描画
+    var secHistory = document.getElementById('sec-history');
+    if (secHistory && secHistory.classList.contains('active')) {
+      renderHistory();
     }
   });
 }
@@ -587,9 +592,9 @@ function doDraw(keepOrder) {
     html += '<div style="background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden">'
       + '<div style="background:' + col + ';color:#fff;padding:8px 14px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">🎾 ' + t('court_label') + currentRound + t('court_suffix') + (courts.length > 1 ? ' - Court ' + (i+1) : '') + '</div>'
       + '<div style="padding:12px"><div class="vs-grid">'
-      + '<div class="team"><div class="team-lbl">TEAM A</div>' + pname(c[0],0) + pname(c[1],1) + '</div>'
+      + '<div class="team">' + pname(c[0],0) + pname(c[1],1) + '</div>'
       + '<div class="vs-text">VS</div>'
-      + '<div class="team"><div class="team-lbl">TEAM B</div>' + pname(c[2],2) + pname(c[3],3) + '</div>'
+      + '<div class="team">' + pname(c[2],2) + pname(c[3],3) + '</div>'
       + '</div></div></div>';
   });
   if (leftover.length > 0) {
