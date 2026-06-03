@@ -297,9 +297,19 @@ function onCountInput() {
   var val = parseInt(document.getElementById('cntInput').value);
   var err = document.getElementById('cntError');
   err.style.display = 'none';
-  if (!val || val < 4 || val > 30) return;
+  if (!val || val < 4 || val > 30) {
+    var goBtn = document.getElementById('goDrawBtn');
+    goBtn.disabled = true; goBtn.style.opacity = '0.4'; goBtn.style.cursor = 'not-allowed';
+    return;
+  }
   playerCount = val;
-  if (noNameMode) return; // noNameModeはEnter/ボタンで確定
+  if (noNameMode) {
+    // 名前なしモードはボタンを活性化するのみ
+    var goBtn = document.getElementById('goDrawBtn');
+    goBtn.disabled = false; goBtn.style.opacity = '1'; goBtn.style.cursor = 'pointer';
+    document.getElementById('step2Card').style.display = 'none';
+    return;
+  }
   renderNameList();
   document.getElementById('step2Card').style.display = 'block';
   var goBtn = document.getElementById('goDrawBtn');
