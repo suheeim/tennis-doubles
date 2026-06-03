@@ -23,7 +23,7 @@
   "draw_result_label": "",
   "next_round_label": "🔮 次回の試合",
   "prev_result_label": "📋 前回の試合",
-  "redraw_btn": "🔀 再抽選",
+  "redraw_btn": "再抽選",
   "serve_btn": "🎾 サーブ自動決定",
   "serve_btn_on": "✅ サーブ自動: ON",
   "cost_btn": "💴 1人あたりの費用を表示",

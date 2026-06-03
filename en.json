@@ -23,7 +23,7 @@
   "draw_result_label": "",
   "next_round_label": "🔮 Next Game",
   "prev_result_label": "📋 Previous Game",
-  "redraw_btn": "🔀 Redraw",
+  "redraw_btn": "Redraw",
   "serve_btn": "🎾 Auto decide serve",
   "serve_btn_on": "✅ Auto Serve: ON",
   "cost_btn": "💴 Show Cost per Person",
