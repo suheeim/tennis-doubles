@@ -214,6 +214,10 @@ function setLang(lang) {
   currentLang = lang;
   localStorage.setItem('tennis_draw_lang', lang);
   document.documentElement.lang = lang === 'ja' ? 'ja' : lang === 'kr' ? 'ko' : 'en';
+  // アイコン即時更新
+  var _icons = {'ja':'🇯🇵','en':'🇺🇸','kr':'🇰🇷'};
+  var _langBtn = document.getElementById('langBtn');
+  if (_langBtn) _langBtn.textContent = _icons[lang] || '🇯🇵';
   // 言語ボタンのactive状態
   ['ja','en','kr'].forEach(function(l) {
     var btn = document.querySelector('.lang-btn[onclick="setLang(\'' + l + '\')"]');
