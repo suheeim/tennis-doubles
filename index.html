@@ -514,10 +514,8 @@ function doDraw(keepOrder) {
 
   var simpleHtml = '';
   courts.forEach(function(c, i) {
-    var si = serveIdxes[i];
-    function sname(name, idx) { return (serveEnabled && idx === si) ? '<strong>🎾'+name+'</strong>' : name; }
     simpleHtml += '<div style="border-left:3px solid var(--border);padding:6px 10px;margin-bottom:6px;font-size:13px;color:var(--text2)">'
-      + sname(c[0],0) + '・' + sname(c[1],1) + ' <span style="color:var(--text3);font-weight:700">vs</span> ' + sname(c[2],2) + '・' + sname(c[3],3)
+      + c[0] + '・' + c[1] + ' <span style="color:var(--text3);font-weight:700">vs</span> ' + c[2] + '・' + c[3]
       + '</div>';
   });
 
