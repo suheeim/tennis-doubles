@@ -20,8 +20,9 @@
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body { overflow-x: hidden; }
 body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; max-width: 480px; margin: 0 auto; padding-bottom: 20px; }
-.header { background: var(--green); color: #fff; padding: 24px 20px 9px; position: sticky; top: 0; z-index: 100; overflow: visible; }
-.tab-bar-wrapper { position: sticky; top: var(--header-height, 0px); z-index: 99; }
+.header { background: var(--green); color: #fff; padding: 24px 20px 9px; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; z-index: 100; overflow: visible; }
+.tab-bar-wrapper { position: fixed; top: var(--header-height, 0px); left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; z-index: 99; }
+.page-content { padding-top: var(--total-fixed-height, 0px); }
 .header h1 { font-size: 20px; font-weight: 700; letter-spacing: 0.02em; }
 .header p { font-size: 13px; opacity: 0.8; margin-top: 2px; }
 .section { display: none; padding: 16px; }
@@ -104,6 +105,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
   <button class="tab-btn" id="tab-history" onclick="switchTab('history')" disabled id-t="tab_history">History</button>
 </div></div>
 
+<div class="page-content">
 <!-- 参加者タブ -->
 <div id="sec-players" class="section active">
   <label class="check-row">
@@ -176,12 +178,19 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
   <div class="sec-label"><span id="t-history-label">Pair History</span></div>
   <div id="historyList"></div>
 </div>
+</div><!-- /.page-content -->
 
 <script>
 // ヘッダー高さをCSS変数に反映
 function updateHeaderHeight() {
   var h = document.querySelector('.header');
-  if (h) document.documentElement.style.setProperty('--header-height', h.offsetHeight + 'px');
+  var t = document.querySelector('.tab-bar-wrapper');
+  if (h) {
+    var hh = h.offsetHeight;
+    document.documentElement.style.setProperty('--header-height', hh + 'px');
+    var th = t ? t.offsetHeight : 0;
+    document.documentElement.style.setProperty('--total-fixed-height', (hh + th) + 'px');
+  }
 }
 window.addEventListener('load', updateHeaderHeight);
 window.addEventListener('resize', updateHeaderHeight);
