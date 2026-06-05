@@ -41,5 +41,6 @@
   "court_label": "제",
   "court_suffix": "게임",
   "round_suffix": "게임",
-  "cost_currency": "원"
+  "cost_currency": "원",
+  "waiting_label": "대기"
 }

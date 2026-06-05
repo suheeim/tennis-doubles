@@ -40,5 +40,6 @@
   "clear_confirm": "全履歴を削除しますか？",
   "court_label": "第",
   "court_suffix": "ゲーム",
-  "round_suffix": "ゲーム"
+  "round_suffix": "ゲーム",
+  "waiting_label": "待機"
 }

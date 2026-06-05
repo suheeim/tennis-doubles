@@ -40,5 +40,6 @@
   "clear_confirm": "Delete all history?",
   "court_label": "Game ",
   "court_suffix": "",
-  "round_suffix": ""
+  "round_suffix": "",
+  "waiting_label": "WAITING"
 }

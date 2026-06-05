@@ -184,11 +184,11 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
 // ヘッダー高さをCSS変数に反映
 function updateHeaderHeight() {
   var h = document.querySelector('.header');
-  var t = document.querySelector('.tab-bar-wrapper');
+  var tb = document.querySelector('.tab-bar-wrapper');
   if (h) {
     var hh = h.offsetHeight;
     document.documentElement.style.setProperty('--header-height', hh + 'px');
-    var th = t ? t.offsetHeight : 0;
+    var th = tb ? tb.offsetHeight : 0;
     document.documentElement.style.setProperty('--total-fixed-height', (hh + th) + 'px');
   }
 }
@@ -592,8 +592,8 @@ function doDraw(keepOrder) {
     }
     var shuffled = shuffleWithPairAvoidance(players);
     courts = [];
-    for (var i = 0; i + 3 < shuffled.length; i += 4) courts.push(shuffled.slice(i, i+4));
-    leftover = shuffled.slice(courts.length * 4);
+    if (shuffled.length >= 4) courts.push(shuffled.slice(0, 4));
+    leftover = shuffled.slice(4);
     serveIdxes = courts.map(function(c) { return getServeIdx(c); });
     courts.forEach(function(c, i) { recordServe(c, serveIdxes[i]); });
     drawCount++;
@@ -612,7 +612,7 @@ function doDraw(keepOrder) {
         : '<div class="pname">' + name + '</div>';
     }
     html += '<div style="background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden">'
-      + '<div style="background:' + col + ';color:#fff;padding:8px 14px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">🎾 ' + t('court_label') + currentRound + t('court_suffix') + (courts.length > 1 ? ' - Court ' + (i+1) : '') + '</div>'
+      + '<div style="background:' + col + ';color:#fff;padding:8px 14px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">🎾 ' + t('court_label') + currentRound + t('court_suffix') + '</div>'
       + '<div style="padding:12px"><div class="vs-grid">'
       + '<div class="team">' + pname(c[0],0) + pname(c[1],1) + '</div>'
       + '<div class="vs-text">VS</div>'
@@ -620,8 +620,8 @@ function doDraw(keepOrder) {
       + '</div></div></div>';
   });
   if (leftover.length > 0) {
-    html += '<div class="leftover-card"><div class="leftover-lbl">WAITING</div><div class="chips">'
-      + leftover.map(function(p) { return '<span class="chip">⏳ ' + p + '</span>'; }).join('')
+    html += '<div class="leftover-card"><div class="leftover-lbl">' + (i18n['waiting_label'] || 'WAITING') + '</div><div class="chips">'
+      + leftover.map(function(p) { return '<span class="chip">' + p + '</span>'; }).join('')
       + '</div></div>';
   }
 
@@ -670,8 +670,8 @@ function generateNextPreview(players, forceRedraw) {
   } else {
     var nextShuffled = shuffleWithPairAvoidance(players);
     nextCourts = [];
-    for (var i = 0; i + 3 < nextShuffled.length; i += 4) nextCourts.push(nextShuffled.slice(i, i+4));
-    nextLeftover = nextShuffled.slice(nextCourts.length * 4);
+    if (nextShuffled.length >= 4) nextCourts.push(nextShuffled.slice(0, 4));
+    nextLeftover = nextShuffled.slice(4);
     reusingNext = false;
   }
   var colors = ['#1D9E75','#0F6E56','#158A64','#0D7A58'];
