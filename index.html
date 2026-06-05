@@ -20,7 +20,8 @@
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body { overflow-x: hidden; }
 body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; max-width: 480px; margin: 0 auto; padding-bottom: 20px; }
-.header { background: var(--green); color: #fff; padding: 48px 20px 18px; position: sticky; top: 0; z-index: 100; overflow: visible; }
+.header { background: var(--green); color: #fff; padding: 24px 20px 9px; position: sticky; top: 0; z-index: 100; overflow: visible; }
+.tab-bar-wrapper { position: sticky; top: var(--header-height, 0px); z-index: 99; }
 .header h1 { font-size: 20px; font-weight: 700; letter-spacing: 0.02em; }
 .header p { font-size: 13px; opacity: 0.8; margin-top: 2px; }
 .section { display: none; padding: 16px; }
@@ -97,11 +98,11 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
   </div>
 </div>
 
-<div class="tab-bar">
+<div class="tab-bar-wrapper"><div class="tab-bar">
   <button class="tab-btn active" id="tab-players" onclick="switchTab('players')" id-t="tab_players">Players</button>
   <button class="tab-btn" id="tab-draw" onclick="switchTab('draw')" disabled id-t="tab_draw">Draw</button>
   <button class="tab-btn" id="tab-history" onclick="switchTab('history')" disabled id-t="tab_history">History</button>
-</div>
+</div></div>
 
 <!-- 参加者タブ -->
 <div id="sec-players" class="section active">
@@ -177,6 +178,14 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
 </div>
 
 <script>
+// ヘッダー高さをCSS変数に反映
+function updateHeaderHeight() {
+  var h = document.querySelector('.header');
+  if (h) document.documentElement.style.setProperty('--header-height', h.offsetHeight + 'px');
+}
+window.addEventListener('load', updateHeaderHeight);
+window.addEventListener('resize', updateHeaderHeight);
+
 var playerCount = 0;
 var lastDraw = null;
 var drawCount = 0;
