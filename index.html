@@ -41,7 +41,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
 .check-row { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--green); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 14px; cursor: pointer; color: #FFFFFF; }
 .check-row input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--green); cursor: pointer; flex-shrink: 0; }
 .step-card { background: var(--surface); border: 1px solid var(--green); border-radius: var(--radius); padding: 18px; margin-bottom: 14px; }
-.step-num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--green); color: #fff; font-size: 11px; font-weight: 700; margin-right: 6px; }
+.step-num { display: none; }
 .step-title { font-size: 14px; font-weight: 700; color: #FFFFFF; margin-bottom: 14px; }
 .name-list { display: flex; flex-direction: column; gap: 8px; }
 .name-row { display: flex; align-items: center; gap: 8px; background: #3D3D3D; border: 1px solid var(--green); border-radius: var(--radius-sm); padding: 8px 8px 8px 12px; }
@@ -132,7 +132,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
     <span id="t-no-name-sub" style="font-size:12px;color:var(--text3);margin-left:auto">Numbers only</span>
   </label>
   <div class="step-card">
-    <div class="step-title"><span class="step-num">1</span><span id="t-step1-title">Enter number of players</span></div>
+    <div class="step-title"><svg width="22" height="22" viewBox="0 0 22 22" style="flex-shrink:0;margin-right:6px"><circle cx="11" cy="11" r="9" fill="#CCDD39"/><path d="M4 7 Q11 3 18 7" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M4 15 Q11 19 18 15" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span id="t-step1-title">Enter number of players</span></div>
     <div style="display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 10px;gap:6px">
       <input id="cntInput" type="number" inputmode="numeric" pattern="[0-9]*" min="4" max="30"
         style="flex:1;font-size:22px;font-weight:700;color:#FFFFFF;text-align:center;padding:10px 0;border:none;outline:none;background:transparent;font-family:'Noto Sans JP',sans-serif"
@@ -144,7 +144,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
     <div id="cntError" style="font-size:12px;color:var(--amber);margin-top:8px;display:none"></div>
   </div>
   <div class="step-card" id="step2Card" style="display:none">
-    <div class="step-title"><span class="step-num">2</span><span id="t-step2-title">Enter names (optional)</span></div>
+    <div class="step-title"><svg width="22" height="22" viewBox="0 0 22 22" style="flex-shrink:0;margin-right:6px"><circle cx="11" cy="11" r="9" fill="#CCDD39"/><path d="M4 7 Q11 3 18 7" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M4 15 Q11 19 18 15" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span id="t-step2-title">Enter names (optional)</span></div>
     <div class="name-list" id="nameList"></div>
   </div>
   <button id="goDrawBtn" class="btn-primary" onclick="goToDraw()" disabled style="opacity:0.4;cursor:not-allowed">
@@ -154,7 +154,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
     <div class="step-title"><span id="t-court-fee-title">💴 Court Fee (optional)</span></div>
     <div style="display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 10px;gap:6px">
       <input id="costInput" type="text" inputmode="numeric" pattern="[0-9,]*"
-        style="flex:1;font-size:20px;font-weight:700;color:var(--green);text-align:center;padding:10px 0;border:none;outline:none;background:transparent;font-family:'Noto Sans JP',sans-serif;min-width:0"
+        style="flex:1;font-size:20px;font-weight:700;color:#FFFFFF;text-align:center;padding:10px 0;border:none;outline:none;background:transparent;font-family:'Noto Sans JP',sans-serif;min-width:0"
         oninput="formatCostInput(this);updateCostBtn()">
       <span id="t-court-fee-unit" style="font-size:14px;color:var(--text3);flex-shrink:0;padding-right:4px">JPY</span>
     </div>
@@ -187,7 +187,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
 
 <!-- 履歴タブ -->
 <div id="sec-history" class="section">
-  <div class="sec-label"><span id="t-history-label">Pair History</span></div>
+  <div style="font-size:14px;font-weight:700;color:#FFFFFF;margin-bottom:12px;">ゲーム履歴</div>
   <div id="historyList"></div>
 </div>
 </div><!-- /.page-content -->
@@ -749,9 +749,8 @@ function renderHistory() {
     function hname(name, i) {
       return (si >= 0 && i === si) ? '🎾 ' + name : name;
     }
-    var isLast = idx === allRows.length - 1;
-    html += '<div style="display:flex;align-items:center;gap:10px;padding:12px 16px;' + (isLast ? '' : 'border-bottom:1px solid #333;') + '">'
-      + '<span style="font-size:11px;font-weight:700;color:#CCDD39;white-space:nowrap;min-width:52px">' + rl + g.round + rs + '</span>'
+    html += '<div style="display:flex;align-items:center;gap:10px;padding:12px 16px;">'
+      + '<span style="font-size:11px;font-weight:700;color:#CCDD39;white-space:nowrap;min-width:28px">' + g.round + '</span>'
       + '<span style="font-size:14px;color:#FFFFFF;flex:1">' + hname(c[0],0) + ' ・ ' + hname(c[1],1) + ' <span style="color:#888;font-weight:700">vs</span> ' + hname(c[2],2) + ' ・ ' + hname(c[3],3) + '</span>'
       + '</div>';
   });
