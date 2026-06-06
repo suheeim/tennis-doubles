@@ -42,7 +42,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
 .check-row input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--green); cursor: pointer; flex-shrink: 0; }
 .step-card { background: var(--surface); border: 1px solid var(--green); border-radius: var(--radius); padding: 18px; margin-bottom: 14px; }
 .step-num { display: none; }
-.step-title { font-size: 14px; font-weight: 700; color: #FFFFFF; margin-bottom: 14px; }
+.step-title { font-size: 14px; font-weight: 700; color: #FFFFFF; margin-bottom: 14px; display: flex; align-items: center; }
 .name-list { display: flex; flex-direction: column; gap: 8px; }
 .name-row { display: flex; align-items: center; gap: 8px; background: #3D3D3D; border: 1px solid var(--green); border-radius: var(--radius-sm); padding: 8px 8px 8px 12px; }
 .name-num { width: 26px; height: 26px; border-radius: 50%; background: #3A3A3A; color: #CCCCCC; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -187,7 +187,6 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
 
 <!-- 履歴タブ -->
 <div id="sec-history" class="section">
-  <div style="font-size:14px;font-weight:700;color:#FFFFFF;margin-bottom:12px;">ゲーム履歴</div>
   <div id="historyList"></div>
 </div>
 </div><!-- /.page-content -->
@@ -743,7 +742,8 @@ function renderHistory() {
   });
   var rl = i18n['round_label'] || '';
   var rs = i18n['round_suffix'] || '';
-  var html = '<div style="background:var(--surface);border:2px solid #CCDD39;border-radius:var(--radius);overflow:hidden;">';
+  var ht = i18n['history_title'] || 'ゲーム履歴';
+  var html = '<div style="background:var(--surface);border:2px solid #CCDD39;border-radius:var(--radius);overflow:hidden;"><div style="padding:12px 16px;border-bottom:1px solid #333;display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:#FFFFFF;">📋 ' + ht + '</div>';
   allRows.forEach(function(row, idx) {
     var g = row.g, c = row.c, si = row.si;
     function hname(name, i) {
