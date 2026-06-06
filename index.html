@@ -654,7 +654,7 @@ function doDraw(keepOrder) {
   });
   if (leftover.length > 0) {
     html += '<div class="leftover-card"><div class="leftover-lbl">' + (i18n['waiting_label'] || 'WAITING') + '</div><div class="chips">'
-      + leftover.map(function(p) { return '<span class="chip">' + p + '</span>'; }).join('')
+      + leftover.map(function(p) { var pi = players.indexOf(p); var num = pi >= 0 ? (pi+1) : ''; var isNum = !isNaN(p.trim()); var disp = (!isNum && num) ? '<span style="font-size:11px;color:#CCCCCC;margin-right:3px">' + num + '</span>' + p : p; return '<span class="chip">' + disp + '</span>'; }).join('')
       + '</div></div>';
   }
 
@@ -716,7 +716,11 @@ function generateNextPreview(players, forceRedraw) {
     var nextServeIdx = generatingServe ? getServeIdx(c) : nextServeIdxes[i];
     if (generatingServe) nextServeIdxes.push(nextServeIdx);
     function npname(name, idx) {
-      return serveEnabled && idx === nextServeIdx ? '<strong style="color:#FFFFFF">🎾 ' + name + '</strong>' : name;
+      var pi = players.indexOf(name);
+      var num = pi >= 0 ? (pi+1) : '';
+      var isNum = !isNaN(name.trim());
+      var disp = (!isNum && num) ? '<span style="font-size:11px;color:#CCCCCC;margin-right:3px">' + num + '</span>' + name : name;
+      return serveEnabled && idx === nextServeIdx ? '<strong style="color:#FFFFFF">🎾 ' + disp + '</strong>' : disp;
     }
     html += '<div style="border-left:3px solid #CCDD39;padding:6px 10px;margin-bottom:6px;font-size:13px;color:#FFFFFF">'
       + npname(c[0],0) + ' ・ ' + npname(c[1],1) + ' <span style="color:var(--text3);font-weight:700">vs</span> ' + npname(c[2],2) + ' ・ ' + npname(c[3],3)
