@@ -11,10 +11,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --green: #1D9E75; --green-dark: #0F6E56; --green-light: #E1F5EE;
+  --green: #5B9E6B; --green-dark: #3A6B47; --green-light: #E8F5EC;
   --amber: #BA7517; --amber-light: #FAEEDA;
-  --bg: #f5f7f5; --surface: #ffffff; --surface2: #f0f3f0;
-  --border: rgba(0,0,0,0.1); --text: #1a1a1a; --text2: #555; --text3: #999;
+  --bg: #121212; --surface: #1E1E1E; --surface2: #2A2A2A;
+  --border: rgba(255,255,255,0.1); --text: #FFFFFF; --text2: #CCCCCC; --text3: #888888;
   --radius: 14px; --radius-sm: 9px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -22,53 +22,57 @@ html, body { overflow-x: hidden; }
 body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; max-width: 480px; margin: 0 auto; padding-bottom: 20px; }
 .header { background: var(--green); color: #fff; padding: 24px 20px 9px; position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; z-index: 100; overflow: visible; }
 .tab-bar-wrapper { position: fixed; top: var(--header-height, 0px); left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; z-index: 99; }
-.page-content { padding-top: var(--total-fixed-height, 0px); }
+.page-content { padding-top: var(--header-height, 52px); padding-bottom: 70px; }
 .header h1 { font-size: 20px; font-weight: 700; letter-spacing: 0.02em; }
 .header p { font-size: 13px; opacity: 0.8; margin-top: 2px; }
 .section { display: none; padding: 16px; }
 .section.active { display: block; }
 .sec-label { font-size: 12px; font-weight: 700; color: var(--green); letter-spacing: 0.08em; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
 .sec-label button { font-size: 12px; color: var(--text3); background: none; border: none; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; }
-.check-row { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 14px; cursor: pointer; }
+.check-row { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--green); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 14px; cursor: pointer; color: #FFFFFF; }
 .check-row input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--green); cursor: pointer; flex-shrink: 0; }
-.step-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 14px; }
+.step-card { background: var(--surface); border: 1px solid var(--green); border-radius: var(--radius); padding: 18px; margin-bottom: 14px; }
 .step-num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--green); color: #fff; font-size: 11px; font-weight: 700; margin-right: 6px; }
-.step-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 14px; }
+.step-title { font-size: 14px; font-weight: 700; color: #FFFFFF; margin-bottom: 14px; }
 .name-list { display: flex; flex-direction: column; gap: 8px; }
-.name-row { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 8px 8px 12px; }
-.name-num { width: 26px; height: 26px; border-radius: 50%; background: var(--green-light); color: var(--green-dark); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.name-input { flex: 1; min-width: 0; font-size: 15px; border: none; outline: none; background: transparent; color: var(--text); font-family: 'Noto Sans JP', sans-serif; }
+.name-row { display: flex; align-items: center; gap: 8px; background: #3D3D3D; border: 1px solid var(--green); border-radius: var(--radius-sm); padding: 8px 8px 8px 12px; }
+.name-num { width: 26px; height: 26px; border-radius: 50%; background: #3A3A3A; color: #CCCCCC; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.name-input { flex: 1; min-width: 0; font-size: 15px; border: none; outline: none; background: transparent; color: #FFFFFF; font-family: 'Noto Sans JP', sans-serif; }
 .name-input::placeholder { color: var(--text3); }
 .mic-btn { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 15px; transition: background .15s; }
 .mic-btn.recording { background: #FCEBEB; color: #E24B4A; animation: pulse .6s infinite alternate; }
 @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.15); } }
 .btn-primary { width: 100%; padding: 15px; background: var(--green); color: #fff; border: none; border-radius: var(--radius); font-size: 16px; font-weight: 700; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: background .15s; margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .btn-primary:active { background: var(--green-dark); }
-.serve-btn { width: 100%; padding: 13px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); font-size: 15px; font-weight: 500; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; margin-top: 8px; transition: background .15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.btn-primary:disabled { background: #2A4A35; color: #5B9E6B; cursor: not-allowed; }
+.serve-btn { width: 100%; padding: 13px; background: var(--surface); color: #FFFFFF; border: 1px solid #444; border-radius: var(--radius); font-size: 15px; font-weight: 500; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; margin-top: 8px; transition: background .15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
 .serve-btn.active { background: #FAEEDA; border-color: #BA7517; color: #BA7517; }
-.court-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 10px; overflow: hidden; animation: fadeUp .3s ease both; }
+.court-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--green); margin-bottom: 10px; overflow: hidden; animation: fadeUp .3s ease both; }
 @keyframes fadeUp { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
 .court-top { background: var(--green); color: #fff; padding: 8px 14px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 .court-body { padding: 12px; }
 .vs-grid { display: grid; grid-template-columns: 1fr 32px 1fr; gap: 6px; align-items: center; }
 .team { background: var(--surface2); border-radius: var(--radius-sm); padding: 10px; text-align: center; }
 .team-lbl { font-size: 10px; font-weight: 700; color: var(--green); letter-spacing: .08em; margin-bottom: 6px; }
-.pname { font-size: 14px; font-weight: 500; padding: 2px 0; }
+.pname { font-size: 14px; font-weight: 500; padding: 2px 0; color: #FFFFFF; }
 .pname.server { color: var(--green-dark); font-weight: 700; }
 .vs-text { text-align: center; font-size: 14px; font-weight: 700; color: var(--text3); }
-.leftover-card { background: var(--surface); border: 1px dashed var(--border); border-radius: var(--radius); padding: 12px; margin-bottom: 10px; text-align: center; }
+.leftover-card { background: var(--surface); border: 1px dashed #444; border-radius: var(--radius); padding: 12px; margin-bottom: 10px; text-align: center; }
 .leftover-lbl { font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: .08em; margin-bottom: 8px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
-.chip { display: inline-flex; align-items: center; gap: 4px; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 4px 10px; font-size: 13px; color: var(--text); }
+.chip { display: inline-flex; align-items: center; gap: 4px; background: var(--surface2); border: 1px solid #444; border-radius: 20px; padding: 4px 10px; font-size: 13px; color: #FFFFFF; }
 .warn { background: var(--amber-light); color: var(--amber); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 14px; margin-top: 8px; }
 .history-line { font-size: 13px; color: var(--text2); padding: 2px 0; }
 .empty { text-align: center; padding: 40px 20px; color: var(--text3); font-size: 14px; line-height: 1.8; }
 .empty-icon { font-size: 40px; margin-bottom: 10px; }
 /* タブバー */
-.tab-bar { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); }
-.tab-btn { flex: 1; padding: 12px 4px; border: none; background: none; font-size: 13px; font-weight: 500; color: var(--text3); border-bottom: 2px solid transparent; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: color .15s; }
-.tab-btn.active { color: var(--green); border-bottom-color: var(--green); font-weight: 700; }
-.tab-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.tab-bar { display: flex; }
+.tab-btn { flex: 1; padding: 10px 4px 12px; border: none; background: transparent; font-size: 20px; font-weight: 700; color: #888888; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; transition: color .15s; filter: grayscale(1) brightness(0.7); font-family: 'Noto Sans JP', sans-serif; }
+.tab-btn .tab-label-txt { font-size: 10px; font-weight: 500; color: #888888; }
+.tab-btn.active { color: var(--green); filter: none; }
+.tab-btn.active .tab-label-txt { color: var(--green); }
+.tab-btn:disabled { opacity: 1; color: #444444; filter: grayscale(1) brightness(0.5); cursor: not-allowed; }
+.tab-btn:disabled .tab-label-txt { color: #444444; }
 /* 言語ボタン */
 .lang-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.4); color: #fff; border-radius: 6px; padding: 4px 8px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: background .15s; }
 .lang-btn.active { background: rgba(255,255,255,0.35); }
@@ -79,31 +83,29 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
 </head>
 <body>
 
-<div class="header">
-  <div style="display:flex;justify-content:space-between;align-items:flex-start">
-    <div>
-      <h1 id="t-app-name">🎾 Doubles Draw</h1>
-      <p id="t-app-desc" style="display:none"></p>
-    </div>
-    <div style="display:flex;flex-direction:row;align-items:center;gap:6px">
-      <button id="resetBtn" onclick="resetAll()" style="display:block;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif" id-t="reset_btn">🏠 Reset</button>
-      <div style="position:relative">
-        <button id="langBtn" onclick="toggleLangMenu()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);color:#fff;border-radius:6px;padding:4px 6px;font-size:20px;cursor:pointer;line-height:1;width:40px;text-align:center">🇯🇵</button>
-        <div id="langMenu" style="display:none;position:absolute;right:0;top:44px;background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.18);z-index:9999;min-width:56px">
-          <div onclick="selectLang('ja')" id="langOpt-ja" style="padding:10px 14px;font-size:20px;cursor:pointer;text-align:center;border-bottom:1px solid #f0f0f0">🇯🇵</div>
-          <div onclick="selectLang('en')" id="langOpt-en" style="padding:10px 14px;font-size:20px;cursor:pointer;text-align:center;border-bottom:1px solid #f0f0f0">🇺🇸</div>
-          <div onclick="selectLang('kr')" id="langOpt-kr" style="padding:10px 14px;font-size:20px;cursor:pointer;text-align:center">🇰🇷</div>
-        </div>
+<div class="header" style="background:transparent;display:flex;align-items:center;justify-content:flex-end;padding:12px 16px;">
+  <div style="display:flex;align-items:center;gap:12px">
+    <button id="resetBtn" onclick="resetAll()" style="background:none;border:none;color:var(--green);font-size:22px;cursor:pointer;padding:4px;line-height:1">🔄</button>
+    <div style="position:relative">
+      <div onclick="toggleLangMenu()" id="langBtn" style="cursor:pointer;font-size:22px;line-height:1">
+        <span id="langFlag">🇯🇵</span>
+      </div>
+      <div id="langMenu" style="display:none;position:absolute;top:36px;right:0;background:#1E1E1E;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.5);z-index:9999;min-width:56px">
+        <div onclick="selectLang('ja')" style="padding:10px 14px;font-size:20px;cursor:pointer;text-align:center;border-bottom:1px solid #333">🇯🇵</div>
+        <div onclick="selectLang('en')" style="padding:10px 14px;font-size:20px;cursor:pointer;text-align:center;border-bottom:1px solid #333">🇺🇸</div>
+        <div onclick="selectLang('kr')" style="padding:10px 14px;font-size:20px;cursor:pointer;text-align:center">🇰🇷</div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="tab-bar-wrapper"><div class="tab-bar">
-  <button class="tab-btn active" id="tab-players" onclick="switchTab('players')" id-t="tab_players">Players</button>
-  <button class="tab-btn" id="tab-draw" onclick="switchTab('draw')" disabled id-t="tab_draw">Draw</button>
-  <button class="tab-btn" id="tab-history" onclick="switchTab('history')" disabled id-t="tab_history">History</button>
-</div></div>
+<div class="footer" style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:100;background:#1E1E1E;border-top:1px solid #333;display:flex;align-items:center;">
+  <div class="tab-bar" style="flex:1;display:flex;">
+    <button class="tab-btn active" id="tab-players" onclick="switchTab('players')" id-t="tab_players"><span class="tab-icon">👥</span><span class="tab-label-txt" id="tl-tab-players">参加者</span></button>
+    <button class="tab-btn" id="tab-draw" onclick="switchTab('draw')" disabled id-t="tab_draw"><span class="tab-icon">🎾</span><span class="tab-label-txt" id="tl-tab-draw">ゲーム</span></button>
+    <button class="tab-btn" id="tab-history" onclick="switchTab('history')" disabled id-t="tab_history"><span class="tab-icon">📋</span><span class="tab-label-txt" id="tl-tab-history">履歴</span></button>
+  </div>
+</div>
 
 <div class="page-content">
 <!-- 参加者タブ -->
@@ -117,7 +119,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
     <div class="step-title"><span class="step-num">1</span><span id="t-step1-title">Enter number of players</span></div>
     <div style="display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 10px;gap:6px">
       <input id="cntInput" type="number" inputmode="numeric" pattern="[0-9]*" min="4" max="30"
-        style="flex:1;font-size:22px;font-weight:700;color:var(--green);text-align:center;padding:10px 0;border:none;outline:none;background:transparent;font-family:'Noto Sans JP',sans-serif"
+        style="flex:1;font-size:22px;font-weight:700;color:#FFFFFF;text-align:center;padding:10px 0;border:none;outline:none;background:transparent;font-family:'Noto Sans JP',sans-serif"
         oninput="this.value=this.value.replace(/[^0-9]/g,'');onCountInput()"
         onkeydown="if(event.key==='Enter')confirmCount()">
       <span id="t-step1-unit" style="font-size:14px;color:var(--text3)">ppl</span>
@@ -184,12 +186,9 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
 // ヘッダー高さをCSS変数に反映
 function updateHeaderHeight() {
   var h = document.querySelector('.header');
-  var tb = document.querySelector('.tab-bar-wrapper');
   if (h) {
     var hh = h.offsetHeight;
     document.documentElement.style.setProperty('--header-height', hh + 'px');
-    var th = tb ? tb.offsetHeight : 0;
-    document.documentElement.style.setProperty('--total-fixed-height', (hh + th) + 'px');
   }
 }
 window.addEventListener('load', updateHeaderHeight);
@@ -234,8 +233,8 @@ function setLang(lang) {
   document.documentElement.lang = lang === 'ja' ? 'ja' : lang === 'kr' ? 'ko' : 'en';
   // アイコン即時更新
   var _icons = {'ja':'🇯🇵','en':'🇺🇸','kr':'🇰🇷'};
-  var _langBtn = document.getElementById('langBtn');
-  if (_langBtn) _langBtn.textContent = _icons[lang] || '🇯🇵';
+  var _langFlag = document.getElementById('langFlag');
+  if (_langFlag) _langFlag.textContent = _icons[lang] || '🇯🇵';
   // 言語ボタンのactive状態
   ['ja','en','kr'].forEach(function(l) {
     var btn = document.querySelector('.lang-btn[onclick="setLang(\'' + l + '\')"]');
