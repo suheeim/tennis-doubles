@@ -211,6 +211,7 @@ var serveHistory = {};
 var gameHistory = [];
 var serveEnabled = false;
 var noNameMode = false;
+var currentPlayers = [];
 var activeRecognition = null;
 var currentLang = 'en';
 var i18n = {};
@@ -566,6 +567,7 @@ function doDraw(keepOrder) {
   var players = noNameMode
     ? (function() { var arr = []; for (var i = 0; i < playerCount; i++) arr.push(String(i+1)); return arr; })()
     : getPlayers();
+  currentPlayers = players;
 
   if (players.length < 4) {
     el.innerHTML = '<div class="warn">' + t('warn_min') + '</div>';
