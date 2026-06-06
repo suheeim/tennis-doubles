@@ -734,19 +734,28 @@ function renderHistory() {
     list.innerHTML = '<div class="empty"><div class="empty-icon">🤝</div>' + t('history_empty') + '</div>';
     return;
   }
-  var html = '';
-  gameHistory.slice().forEach(function(g) {
+  var allRows = [];
+  gameHistory.slice().reverse().forEach(function(g) {
     g.courts.forEach(function(c, ci) {
       var si = g.serveIdxes ? g.serveIdxes[ci] : -1;
-      function hname(name, idx) {
-        return (si >= 0 && idx === si) ? '<strong style="color:#FFFFFF">🎾 ' + name + '</strong>' : name;
-      }
-      html += '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)">'
-        + '<span style="font-size:11px;font-weight:700;color:#CCDD39;white-space:nowrap;min-width:50px">' + t('round_label') + g.round + t('round_suffix') + '</span>'
-        + '<span style="font-size:14px;color:var(--text)">' + hname(c[0],0) + '・' + hname(c[1],1) + ' <span style="color:var(--text3);font-weight:700">vs</span> ' + hname(c[2],2) + '・' + hname(c[3],3) + '</span>'
-        + '</div>';
+      allRows.push({ g: g, c: c, si: si });
     });
   });
+  var rl = i18n['round_label'] || '';
+  var rs = i18n['round_suffix'] || '';
+  var html = '<div style="background:var(--surface);border:2px solid #CCDD39;border-radius:var(--radius);overflow:hidden;">';
+  allRows.forEach(function(row, idx) {
+    var g = row.g, c = row.c, si = row.si;
+    function hname(name, i) {
+      return (si >= 0 && i === si) ? '🎾 ' + name : name;
+    }
+    var isLast = idx === allRows.length - 1;
+    html += '<div style="display:flex;align-items:center;gap:10px;padding:12px 16px;' + (isLast ? '' : 'border-bottom:1px solid #333;') + '">'
+      + '<span style="font-size:11px;font-weight:700;color:#CCDD39;white-space:nowrap;min-width:52px">' + rl + g.round + rs + '</span>'
+      + '<span style="font-size:14px;color:#FFFFFF;flex:1">' + hname(c[0],0) + ' ・ ' + hname(c[1],1) + ' <span style="color:#888;font-weight:700">vs</span> ' + hname(c[2],2) + ' ・ ' + hname(c[3],3) + '</span>'
+      + '</div>';
+  });
+  html += '</div>';
   list.innerHTML = html;
 }
 
