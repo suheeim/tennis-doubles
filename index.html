@@ -291,7 +291,7 @@ function applyI18n() {
     'tab_players': 'tl-tab-players',
     'tab_draw': 'tl-tab-draw',
     'tab_history': 'tl-tab-history',
-    'no_name_label': 't-no-name-label',
+    // 'no_name_label': 't-no-name-label', // サブテキスト保護のため個別処理
     'no_name_sub': 't-no-name-sub',
     'step1_title': 't-step1-title',
     'step1_unit': 't-step1-unit',
@@ -317,6 +317,10 @@ function applyI18n() {
   var cntInput = document.getElementById('cntInput');
   if (cntInput) cntInput.placeholder = t('step1_placeholder');
   // step2_titleはサブテキスト付きで個別処理
+  var nnLabel = document.getElementById('t-no-name-label');
+  if (nnLabel) {
+    nnLabel.innerHTML = t('no_name_label') + '<span style="font-size:11px;color:#888888;margin-left:4px">' + (t('no_name_sub') || '') + '</span>';
+  }
   var s2el = document.getElementById('t-step2-title');
   if (s2el) {
     s2el.innerHTML = t('step2_title') + '<span style="font-size:11px;color:#888888;margin-left:4px">' + (t('step2_sub') || '') + '</span>';
@@ -625,9 +629,13 @@ function doDraw(keepOrder) {
     var col = colors[i % colors.length];
     var si = serveIdxes[i];
     function pname(name, idx) {
+      var pi = currentPlayers.indexOf(name);
+      var num = pi >= 0 ? (pi + 1) : '';
+      var isNumName = !isNaN(name.trim());
+      var displayName = (!isNumName && num) ? '<span style="font-size:14px;color:#CCCCCC;margin-right:5px">' + num + '</span>' + name : name;
       return (serveEnabled && si >= 0 && idx === si)
-        ? '<div class="pname server">🎾 ' + name + '</div>'
-        : '<div class="pname">' + name + '</div>';
+        ? '<div class="pname server">🎾 ' + displayName + '</div>'
+        : '<div class="pname">' + displayName + '</div>';
     }
     html += '<div style="background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden">'
       + '<div style="background:' + col + ';color:#1a1a1a;padding:8px 14px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px">' + '<svg width="16" height="16" viewBox="0 0 16 16" style="flex-shrink:0;margin-right:2px"><ellipse cx="7" cy="6" rx="5" ry="6" fill="none" stroke="#1a1a1a" stroke-width="1.8"/><line x1="4" y1="3.5" x2="10" y2="3.5" stroke="#1a1a1a" stroke-width="1" opacity="0.7"/><line x1="3.5" y1="6" x2="10.5" y2="6" stroke="#1a1a1a" stroke-width="1" opacity="0.7"/><line x1="4" y1="8.5" x2="10" y2="8.5" stroke="#1a1a1a" stroke-width="1" opacity="0.7"/><line x1="5.5" y1="1" x2="5.5" y2="11.5" stroke="#1a1a1a" stroke-width="1" opacity="0.7"/><line x1="7" y1="0.5" x2="7" y2="12" stroke="#1a1a1a" stroke-width="1" opacity="0.7"/><line x1="8.5" y1="1" x2="8.5" y2="11.5" stroke="#1a1a1a" stroke-width="1" opacity="0.7"/><rect x="6.2" y="11.8" width="1.6" height="4" rx="0.8" fill="#1a1a1a"/></svg>' + ' ' + t('court_label') + currentRound + t('court_suffix') + '</div>'
@@ -752,7 +760,9 @@ function renderHistory() {
   allRows.forEach(function(row, idx) {
     var g = row.g, c = row.c, si = row.si;
     function hname(name, i) {
-      return (si >= 0 && i === si) ? '🎾 ' + name : name;
+      var isNumName = !isNaN(name.trim());
+      var displayName = isNumName ? name : name;
+      return (si >= 0 && i === si) ? '🎾 ' + displayName : displayName;
     }
     html += '<div style="display:flex;align-items:center;gap:10px;padding:12px 16px;">'
       + '<span style="font-size:11px;font-weight:700;color:#CCDD39;white-space:nowrap;min-width:28px">' + g.round + '</span>'
