@@ -734,16 +734,14 @@ function renderHistory() {
     return;
   }
   var allRows = [];
-  gameHistory.slice().reverse().forEach(function(g) {
+  gameHistory.slice().forEach(function(g) {
     g.courts.forEach(function(c, ci) {
       var si = g.serveIdxes ? g.serveIdxes[ci] : -1;
       allRows.push({ g: g, c: c, si: si });
     });
   });
-  var rl = i18n['round_label'] || '';
-  var rs = i18n['round_suffix'] || '';
   var ht = i18n['history_title'] || 'ゲーム履歴';
-  var html = '<div style="background:var(--surface);border:2px solid #CCDD39;border-radius:var(--radius);overflow:hidden;"><div style="padding:12px 16px;border-bottom:1px solid #333;display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:#FFFFFF;">📋 ' + ht + '</div>';
+  var html = '<div style="background:var(--surface);border:2px solid #CCDD39;border-radius:var(--radius);overflow:hidden;"><div style="padding:12px 16px;display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:#FFFFFF;">📋 ' + ht + '</div>';
   allRows.forEach(function(row, idx) {
     var g = row.g, c = row.c, si = row.si;
     function hname(name, i) {
@@ -757,6 +755,7 @@ function renderHistory() {
   html += '</div>';
   list.innerHTML = html;
 }
+
 
 function startVoiceCount() {
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
