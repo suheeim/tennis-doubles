@@ -9,12 +9,12 @@
   "tab_history": "기록",
   "no_name_label": "성명입력 생략 (번호가 성명)",
   "no_name_sub": "",
-  "step1_title": "참가자 수 입력",
-  "step1_placeholder": "",
+  "step1_title": "참가자 수",
+  "step1_placeholder": "예: 4",
   "step1_unit": "명",
   "step1_err_min": "⚠️ 4명 이상 입력해 주세요",
   "step1_err_max": "⚠️ 30명 이하로 입력해 주세요",
-  "step2_title": "성명입력 (선택)",
+  "step2_title": "성명",
   "player_placeholder": "",
   "go_draw_btn": "게임 편성",
   "court_fee_title": "💴 테니스코트 비용 (선택)",
@@ -42,5 +42,7 @@
   "court_suffix": "게임",
   "round_suffix": "게임",
   "cost_currency": "원",
-  "waiting_label": "대기"
+  "waiting_label": "대기",
+  "step2_sub": "(미입력시 번호가 성명이 됩니다)",
+  "history_title": "게임 기록"
 }

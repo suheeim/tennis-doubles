@@ -9,12 +9,12 @@
   "tab_history": "History",
   "no_name_label": "No names (numbers only)",
   "no_name_sub": "",
-  "step1_title": "Enter number of players",
-  "step1_placeholder": "",
+  "step1_title": "Players",
+  "step1_placeholder": "e.g. 4",
   "step1_unit": "ppl",
   "step1_err_min": "⚠️ Please enter 4 or more",
   "step1_err_max": "⚠️ Please enter 30 or less",
-  "step2_title": "Enter names (optional)",
+  "step2_title": "Names",
   "player_placeholder": "",
   "go_draw_btn": "Create Match",
   "court_fee_title": "💴 Tennis Court Fee (optional)",
@@ -41,5 +41,7 @@
   "court_label": "Game ",
   "court_suffix": "",
   "round_suffix": "",
-  "waiting_label": "WAITING"
+  "waiting_label": "WAITING",
+  "step2_sub": "(leave blank to use numbers)",
+  "history_title": "Game History"
 }

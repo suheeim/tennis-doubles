@@ -132,7 +132,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
     <span id="t-no-name-sub" style="font-size:12px;color:var(--text3);margin-left:auto">Numbers only</span>
   </label>
   <div class="step-card">
-    <div class="step-title"><svg width="22" height="22" viewBox="0 0 22 22" style="flex-shrink:0;margin-right:6px"><circle cx="11" cy="11" r="9" fill="#CCDD39"/><path d="M4 7 Q11 3 18 7" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M4 15 Q11 19 18 15" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span id="t-step1-title">Enter number of players</span></div>
+    <div class="step-title"><svg width="22" height="22" viewBox="0 0 22 22" style="flex-shrink:0;margin-right:6px"><circle cx="11" cy="11" r="9" fill="#CCDD39"/><path d="M4 7 Q11 3 18 7" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M4 15 Q11 19 18 15" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span id="t-step1-title">参加者数</span></div>
     <div style="display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 10px;gap:6px">
       <input id="cntInput" type="number" inputmode="numeric" pattern="[0-9]*" min="4" max="30"
         style="flex:1;font-size:22px;font-weight:700;color:#FFFFFF;text-align:center;padding:10px 0;border:none;outline:none;background:transparent;font-family:'Noto Sans JP',sans-serif"
@@ -144,7 +144,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
     <div id="cntError" style="font-size:12px;color:var(--amber);margin-top:8px;display:none"></div>
   </div>
   <div class="step-card" id="step2Card" style="display:none">
-    <div class="step-title"><svg width="22" height="22" viewBox="0 0 22 22" style="flex-shrink:0;margin-right:6px"><circle cx="11" cy="11" r="9" fill="#CCDD39"/><path d="M4 7 Q11 3 18 7" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M4 15 Q11 19 18 15" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span id="t-step2-title">Enter names (optional)</span></div>
+    <div class="step-title"><svg width="22" height="22" viewBox="0 0 22 22" style="flex-shrink:0;margin-right:6px"><circle cx="11" cy="11" r="9" fill="#CCDD39"/><path d="M4 7 Q11 3 18 7" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M4 15 Q11 19 18 15" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span id="t-step2-title">名前</span></div>
     <div class="name-list" id="nameList"></div>
   </div>
   <button id="goDrawBtn" class="btn-primary" onclick="goToDraw()" disabled style="opacity:0.4;cursor:not-allowed">
@@ -295,7 +295,7 @@ function applyI18n() {
     'no_name_sub': 't-no-name-sub',
     'step1_title': 't-step1-title',
     'step1_unit': 't-step1-unit',
-    'step2_title': 't-step2-title',
+    // 'step2_title': 't-step2-title', // サブテキスト保護のため個別処理
     'go_draw_btn': 't-go-draw-btn',
     'court_fee_title': 't-court-fee-title',
     'court_fee_unit': 't-court-fee-unit',
@@ -316,6 +316,11 @@ function applyI18n() {
   // placeholder
   var cntInput = document.getElementById('cntInput');
   if (cntInput) cntInput.placeholder = t('step1_placeholder');
+  // step2_titleはサブテキスト付きで個別処理
+  var s2el = document.getElementById('t-step2-title');
+  if (s2el) {
+    s2el.innerHTML = t('step2_title') + '<span style="font-size:11px;color:#888888;margin-left:4px">' + (t('step2_sub') || '') + '</span>';
+  }
   var costInput = document.getElementById('costInput');
   if (costInput) costInput.placeholder = t('court_fee_placeholder');
 
@@ -742,7 +747,7 @@ function renderHistory() {
       allRows.push({ g: g, c: c, si: si });
     });
   });
-  var ht = i18n['history_title'] || 'ゲーム履歴';
+  var ht = t('history_title');
   var html = '<div style="background:var(--surface);border:2px solid #CCDD39;border-radius:var(--radius);overflow:hidden;"><div style="padding:12px 16px;display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:#FFFFFF;">📋 ' + ht + '</div>';
   allRows.forEach(function(row, idx) {
     var g = row.g, c = row.c, si = row.si;

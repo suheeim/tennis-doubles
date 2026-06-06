@@ -9,12 +9,12 @@
   "tab_history": "履歴",
   "no_name_label": "名前入力不要（番号が名前になる）",
   "no_name_sub": "",
-  "step1_title": "参加者数を入力",
-  "step1_placeholder": "",
+  "step1_title": "参加者数",
+  "step1_placeholder": "例: 4",
   "step1_unit": "人",
   "step1_err_min": "⚠️ 4人以上入力してください",
   "step1_err_max": "⚠️ 30人以下で入力してください",
-  "step2_title": "名前入力（選択）",
+  "step2_title": "名前",
   "player_placeholder": "",
   "go_draw_btn": "ゲーム組合せ作成",
   "court_fee_title": "💴 テニスコート費用（任意）",
@@ -41,5 +41,7 @@
   "court_label": "第",
   "court_suffix": "ゲーム",
   "round_suffix": "ゲーム",
-  "waiting_label": "待機"
+  "waiting_label": "待機",
+  "step2_sub": "（未入力の場合、番号が名前になる）",
+  "history_title": "ゲーム履歴"
 }
