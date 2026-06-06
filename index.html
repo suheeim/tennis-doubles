@@ -58,7 +58,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
 .serve-btn.active { background: #FAEEDA; border-color: #BA7517; color: #BA7517; }
 .court-card { background: var(--surface); border-radius: var(--radius); border: 1px solid #CCDD39; margin-bottom: 10px; overflow: hidden; animation: fadeUp .3s ease both; }
 @keyframes fadeUp { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
-.court-top { background: var(--green); color: #fff; padding: 8px 14px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.court-top { background: var(--green); color: #1a1a1a; padding: 8px 14px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 .court-body { padding: 12px; }
 .vs-grid { display: grid; grid-template-columns: 1fr 32px 1fr; gap: 6px; align-items: center; }
 .team { background: var(--surface2); border-radius: var(--radius-sm); padding: 10px; text-align: center; }
@@ -170,24 +170,18 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
   </div>
   <!-- 以前・予定（2カラム） -->
   <div id="prevNextArea" style="display:none;margin-top:12px">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start">
-      <div id="prevResult">
-        <div style="font-size:11px;font-weight:700;color:#FFFFFF;letter-spacing:.08em;margin-bottom:6px"><span id="t-prev-result-label">📋 Previous</span></div>
-        <div id="prevResultBody"></div>
-      </div>
-      <div id="nextResult">
-        <div style="font-size:11px;font-weight:700;color:#FFFFFF;letter-spacing:.08em;margin-bottom:6px"><span id="t-next-round-label">🔮 Next</span></div>
-        <div id="nextResultBody"></div>
-      </div>
+    <div id="nextResult">
+      <div style="font-size:11px;font-weight:700;color:#FFFFFF;letter-spacing:.08em;margin-bottom:6px"><span id="t-next-round-label">🔮 Next</span></div>
+      <div id="nextResultBody"></div>
     </div>
   </div>
   <button class="btn-primary" onclick="doDraw(false)"><span>🔀</span><span id="t-redraw-btn">Redraw</span></button>
   <button class="serve-btn" id="serveBtn" onclick="toggleServe()"><span id="t-serve-btn">🎾 Auto decide serve</span></button>
   <button class="serve-btn" onclick="showCostResult()" id="costBtn" disabled style="opacity:0.4;cursor:not-allowed"><span id="t-cost-btn">💴 Show Cost per Person</span></button>
-  <div id="costResultDraw" style="display:none;background:var(--green-light);border:1px solid var(--green);border-radius:var(--radius-sm);padding:14px;margin-top:8px;text-align:center">
-    <div style="font-size:28px;font-weight:700;color:var(--green-dark)"><span id="costCurrency">¥</span><span id="perPersonDraw">0</span></div>
-    <div style="font-size:12px;color:var(--green-dark);margin-top:2px" id="t-cost-per-person">per person</div>
-    <div id="costTotalDraw" style="font-size:12px;color:var(--green-dark);opacity:0.7;margin-top:6px"></div>
+  <div id="costResultDraw" style="display:none;background:#121212;border:2px solid #CCDD39;border-radius:var(--radius-sm);padding:14px;margin-top:8px;text-align:center">
+    <div style="font-size:28px;font-weight:700;color:#CCDD39"><span id="costCurrency">¥</span><span id="perPersonDraw">0</span></div>
+    <div style="font-size:12px;color:#CCDD39;margin-top:2px" id="t-cost-per-person">per person</div>
+    <div id="costTotalDraw" style="font-size:12px;color:#CCDD39;opacity:0.8;margin-top:6px"></div>
   </div>
 </div>
 
@@ -616,7 +610,7 @@ function doDraw(keepOrder) {
     savePairs(courts, currentRound, serveIdxes);
   }
 
-  var colors = ['#1D9E75','#0F6E56','#158A64','#0D7A58','#1A8A68','#0B6048'];
+  var colors = ['#CCDD39','#A0AA20','#B8C830','#8A9418'];
   var html = '';
   courts.forEach(function(c, i) {
     var col = colors[i % colors.length];
@@ -689,7 +683,7 @@ function generateNextPreview(players, forceRedraw) {
     nextLeftover = nextShuffled.slice(4);
     reusingNext = false;
   }
-  var colors = ['#1D9E75','#0F6E56','#158A64','#0D7A58'];
+  var colors = ['#CCDD39','#A0AA20','#B8C830','#8A9418'];
   var html = '';
   var nextServeIdxes = (reusingNext && lastDraw && lastDraw.nextServeIdxes) ? lastDraw.nextServeIdxes : [];
   var generatingServe = !(reusingNext && lastDraw && lastDraw.nextServeIdxes);
@@ -700,7 +694,7 @@ function generateNextPreview(players, forceRedraw) {
     function npname(name, idx) {
       return serveEnabled && idx === nextServeIdx ? '<strong style="color:#FFFFFF">🎾 ' + name + '</strong>' : name;
     }
-    html += '<div style="border-left:3px solid ' + col + ';padding:6px 10px;margin-bottom:6px;font-size:13px;color:var(--text2)">'
+    html += '<div style="border-left:3px solid #CCDD39;padding:6px 10px;margin-bottom:6px;font-size:13px;color:#FFFFFF">'
       + npname(c[0],0) + ' ・ ' + npname(c[1],1) + ' <span style="color:var(--text3);font-weight:700">vs</span> ' + npname(c[2],2) + ' ・ ' + npname(c[3],3)
       + '</div>';
   });
@@ -745,10 +739,10 @@ function renderHistory() {
     g.courts.forEach(function(c, ci) {
       var si = g.serveIdxes ? g.serveIdxes[ci] : -1;
       function hname(name, idx) {
-        return (si >= 0 && idx === si) ? '<strong style="color:var(--green)">🎾 ' + name + '</strong>' : name;
+        return (si >= 0 && idx === si) ? '<strong style="color:#FFFFFF">🎾 ' + name + '</strong>' : name;
       }
       html += '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)">'
-        + '<span style="font-size:11px;font-weight:700;color:var(--green);white-space:nowrap;min-width:50px">' + t('round_label') + g.round + t('round_suffix') + '</span>'
+        + '<span style="font-size:11px;font-weight:700;color:#CCDD39;white-space:nowrap;min-width:50px">' + t('round_label') + g.round + t('round_suffix') + '</span>'
         + '<span style="font-size:14px;color:var(--text)">' + hname(c[0],0) + '・' + hname(c[1],1) + ' <span style="color:var(--text3);font-weight:700">vs</span> ' + hname(c[2],2) + '・' + hname(c[3],3) + '</span>'
         + '</div>';
     });
