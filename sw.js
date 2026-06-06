@@ -1,8 +1,8 @@
-var CACHE_NAME = 'tennis-doubles-20260602';
+// 常に最新を取得、オフライン時のみキャッシュを使用
+var CACHE_NAME = 'tennis-doubles-v1';
 var urlsToCache = [
   '/tennis-doubles/',
   '/tennis-doubles/index.html',
-  '/tennis-doubles/index_en.html',
   '/tennis-doubles/manifest.json'
 ];
 
@@ -17,9 +17,19 @@ self.addEventListener('install', function(e) {
 
 self.addEventListener('fetch', function(e) {
   e.respondWith(
-    fetch(e.request).catch(function() {
-      return caches.match(e.request);
-    })
+    fetch(e.request, { cache: 'no-store' })
+      .then(function(response) {
+        // 取得成功したらキャッシュも更新
+        var resClone = response.clone();
+        caches.open(CACHE_NAME).then(function(cache) {
+          cache.put(e.request, resClone);
+        });
+        return response;
+      })
+      .catch(function() {
+        // オフラインの時だけキャッシュを使用
+        return caches.match(e.request);
+      })
   );
 });
 
