@@ -291,7 +291,7 @@ function applyI18n() {
     'tab_players': 'tl-tab-players',
     'tab_draw': 'tl-tab-draw',
     'tab_history': 'tl-tab-history',
-    // 'no_name_label': 't-no-name-label', // サブテキスト保護のため個別処理
+    'no_name_label': 't-no-name-label',
     'no_name_sub': 't-no-name-sub',
     'step1_title': 't-step1-title',
     'step1_unit': 't-step1-unit',
@@ -317,10 +317,7 @@ function applyI18n() {
   var cntInput = document.getElementById('cntInput');
   if (cntInput) cntInput.placeholder = t('step1_placeholder');
   // step2_titleはサブテキスト付きで個別処理
-  var nnLabel = document.getElementById('t-no-name-label');
-  if (nnLabel) {
-    nnLabel.innerHTML = t('no_name_label') + '<span style="font-size:11px;color:#888888;margin-left:4px">' + (t('no_name_sub') || '') + '</span>';
-  }
+
   var s2el = document.getElementById('t-step2-title');
   if (s2el) {
     s2el.innerHTML = t('step2_title') + '<span style="font-size:11px;color:#888888;margin-left:4px">' + (t('step2_sub') || '') + '</span>';
