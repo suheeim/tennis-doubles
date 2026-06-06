@@ -28,6 +28,15 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
 .section { display: none; padding: 16px; }
 .section.active { display: block; }
 .sec-label { font-size: 12px; font-weight: 700; color: var(--green); letter-spacing: 0.08em; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+.rank-row { display: grid; grid-template-columns: 36px 1fr auto; align-items: center; gap: 4px; padding: 12px 16px; border-bottom: 1px solid #333; }
+.rank-row:last-child { border-bottom: none; }
+.rank-num { font-size: 18px; font-weight: 700; color: #888888; min-width: 32px; }
+.rank-num.gold { color: #F0A500; }
+.rank-num.silver { color: #A0A0A0; }
+.rank-num.bronze { color: #C07020; }
+.rank-name-hist { flex: 1; font-size: 15px; font-weight: 500; color: #FFFFFF; }
+.rank-detail { font-size: 12px; color: #888888; margin-top: 2px; }
+.rank-count { font-size: 16px; font-weight: 700; color: var(--green); }
 .sec-label button { font-size: 12px; color: var(--text3); background: none; border: none; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; }
 .check-row { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--green); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 14px; cursor: pointer; color: #FFFFFF; }
 .check-row input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--green); cursor: pointer; flex-shrink: 0; }
@@ -47,7 +56,7 @@ body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: va
 .btn-primary:disabled { background: #4A4A20; color: #CCDD39; cursor: not-allowed; }
 .serve-btn { width: 100%; padding: 13px; background: var(--surface); color: #FFFFFF; border: 1px solid #444; border-radius: var(--radius); font-size: 15px; font-weight: 500; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; margin-top: 8px; transition: background .15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
 .serve-btn.active { background: #FAEEDA; border-color: #BA7517; color: #BA7517; }
-.court-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--green); margin-bottom: 10px; overflow: hidden; animation: fadeUp .3s ease both; }
+.court-card { background: var(--surface); border-radius: var(--radius); border: 1px solid #CCDD39; margin-bottom: 10px; overflow: hidden; animation: fadeUp .3s ease both; }
 @keyframes fadeUp { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
 .court-top { background: var(--green); color: #fff; padding: 8px 14px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 .court-body { padding: 12px; }
@@ -689,7 +698,7 @@ function generateNextPreview(players, forceRedraw) {
     var nextServeIdx = generatingServe ? getServeIdx(c) : nextServeIdxes[i];
     if (generatingServe) nextServeIdxes.push(nextServeIdx);
     function npname(name, idx) {
-      return serveEnabled && idx === nextServeIdx ? '<strong style="color:' + col + '">🎾 ' + name + '</strong>' : name;
+      return serveEnabled && idx === nextServeIdx ? '<strong style="color:#FFFFFF">🎾 ' + name + '</strong>' : name;
     }
     html += '<div style="border-left:3px solid ' + col + ';padding:6px 10px;margin-bottom:6px;font-size:13px;color:var(--text2)">'
       + npname(c[0],0) + ' ・ ' + npname(c[1],1) + ' <span style="color:var(--text3);font-weight:700">vs</span> ' + npname(c[2],2) + ' ・ ' + npname(c[3],3)
